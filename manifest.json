@@ -1,0 +1,27 @@
+{
+  "name": "학교 서바이벌 치트키",
+  "short_name": "🎮 치트키",
+  "description": "급식 조회, 수행평가 분석, 자아번역기 — 성광고 생존 앱",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#00f5ff",
+  "orientation": "portrait-primary",
+  "lang": "ko",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["education", "utilities"]
+}
