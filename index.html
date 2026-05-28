@@ -625,15 +625,7 @@ input.s-inp:focus{border-color:var(--cyan)}
     <div class="tkcal" id="dinner-kcal"></div>
   </div>
 
-  <!-- D-Day 설정 -->
-  <div class="card" style="--acc:var(--yellow)">
-    <div class="clabel" style="color:var(--yellow)">D-DAY TRACKER</div>
-    <div style="display:flex;gap:8px;align-items:center">
-      <input type="date" id="exam-date" class="tin" style="flex:1;font-family:var(--mono);font-size:12px">
-      <button class="api-save" onclick="setDday()">설정</button>
-    </div>
-    <div id="dday-label" style="font-size:11px;color:var(--text3);margin-top:6px;font-family:var(--mono)"></div>
-  </div>
+  <!-- D-Day 트래커 제거 (플래너 탭에서 관리) -->
 
 </div>
 
@@ -950,14 +942,14 @@ input.s-inp:focus{border-color:var(--cyan)}
 <!-- ══════════ TAB 6: NOTES (보관함) ══════════ -->
 <div id="tab-notes" class="panel">
 
-  <div class="sec-title">🗂️ 프린트물 보관함</div>
-  <div class="sec-sub"># 사진 보관 + AI 요약기</div>
+  <div class="sec-title">🗂️ 보관함</div>
+  <div class="sec-sub"># 사진 보관 + AI 요약기 + 요약 보관함</div>
 
   <!-- 서브 탭 -->
   <div class="sub-tabs" style="margin-bottom:14px">
-    <button class="stbtn active analyze" id="nstbtn-photos" onclick="switchNotesTab('photos',this)">📸 사진 보관함</button>
-    <button class="stbtn grade" id="nstbtn-ai" onclick="switchNotesTab('ai',this)">🤖 AI 요약기</button>
-    <button class="stbtn" id="nstbtn-saved" onclick="switchNotesTab('saved',this)" style="flex:1;background:none;border:none;font-family:var(--main);font-size:12px;font-weight:700;color:var(--text3);cursor:pointer;text-align:center;transition:all .2s">📚 요약 보관함</button>
+    <button class="stbtn active analyze" id="nstbtn-photos" onclick="switchNotesTab('photos',this)">📸 사진</button>
+    <button class="stbtn grade" id="nstbtn-ai" onclick="switchNotesTab('ai',this)">🤖 AI 요약</button>
+    <button class="stbtn analyze" id="nstbtn-saved" onclick="switchNotesTab('saved',this)">📚 보관함</button>
   </div>
 
   <!-- ── 사진 보관함 ── -->
@@ -2746,7 +2738,8 @@ function switchNotesTab(id, btn) {
   if (btn) {
     btn.classList.add('active');
     if (id==='photos') btn.classList.add('analyze');
-    if (id==='ai') btn.classList.add('grade');
+    else if (id==='ai') btn.classList.add('grade');
+    else if (id==='saved') btn.classList.add('analyze');
   }
   if (id==='saved') renderSavedSummaries();
 }
