@@ -1089,6 +1089,9 @@ input.s-inp:focus{border-color:var(--cyan)}
 let apiKey = 'cjddk0509';
 let examDate    = localStorage.getItem('ss_exam') || '';
 let samples     = JSON.parse(localStorage.getItem('ss_samples') || '[]');
+let exams       = JSON.parse(localStorage.getItem('ss_exams')  || '[]');
+let grades      = JSON.parse(localStorage.getItem('ss_grades') || '[]');
+let gradeChart  = null;
 let sampleImgData = null;
 let assignImgData = null;
 let lastAnalysis  = null;
@@ -2315,7 +2318,7 @@ function initPlanner() {
 }
 
 init();
-</script>
+
 // ══════════════════════════════════════════
 //  NOTES (프린트물 보관함)
 // ══════════════════════════════════════════
@@ -2517,13 +2520,9 @@ document.getElementById('img-modal')?.addEventListener('touchend', e => {
 }, {passive:true});
 
 
-<script>
 // ══════════════════════════════════════════
 //  PLANNER — 시험 일정 + 성적 관리
 // ══════════════════════════════════════════
-let exams  = JSON.parse(localStorage.getItem('ss_exams')  || '[]');
-let grades = JSON.parse(localStorage.getItem('ss_grades') || '[]');
-let gradeChart = null;
 
 // ── 시험 일정 ──
 function addExam() {
@@ -2720,7 +2719,7 @@ function updateChart() {
     }
   });
 }
-</script>
+
 // ══════════════════════════════════════════
 //  NOTES SUB-TAB SWITCH
 // ══════════════════════════════════════════
@@ -3056,6 +3055,7 @@ function setupAiDragDrop() {
   });
 }
 
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" onload="initPlanner()"></script>
 </body>
 </html>
