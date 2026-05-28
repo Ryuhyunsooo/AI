@@ -2813,7 +2813,8 @@ async function runAiSummary() {
     document.getElementById('ocr-status').style.display = 'none';
   }
 
-  document.getElementById('ai-ocr-result').value = extractedText || '(텍스트 없음)';
+  const ocrResultEl = document.getElementById('ai-ocr-result');
+  if (ocrResultEl) ocrResultEl.value = extractedText || '(텍스트 없음)';
 
   if (!extractedText) {
     btn.disabled = false; btn.textContent = '🤖 AI 요약 시작';
@@ -3019,7 +3020,8 @@ function viewSavedSummary(id) {
   switchNotesTab('ai', document.getElementById('nstbtn-ai'));
   document.getElementById('ai-result-box').style.display = 'block';
   renderAiSummary(s.data);
-  document.getElementById('ai-ocr-result').value = s.data.rawText || '';
+  const ocrEl = document.getElementById('ai-ocr-result');
+  if (ocrEl) ocrEl.value = s.data.rawText || '';
 }
 
 function printSavedSummary(id) {
