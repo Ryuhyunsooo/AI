@@ -374,6 +374,107 @@ input.s-inp:focus{border-color:var(--cyan)}
 #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--green);color:#000;font-family:var(--mono);font-size:12px;font-weight:700;padding:8px 18px;border-radius:20px;z-index:10000;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
 #toast.show{opacity:1}
 
+/* ── NOTES TAB ── */
+.notes-upload-zone{border:2px dashed var(--border2);border-radius:12px;padding:28px 16px;text-align:center;cursor:pointer;transition:all .2s;position:relative;margin-bottom:12px}
+.notes-upload-zone:hover,.notes-upload-zone.dragover{border-color:var(--cyan);background:rgba(0,245,255,.04)}
+.notes-upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0}
+.notes-upload-icon{font-size:30px;margin-bottom:8px}
+.notes-upload-txt{font-size:13px;color:var(--text2)}
+.notes-upload-sub{font-size:11px;color:var(--text3);margin-top:4px;font-family:var(--mono)}
+
+/* 필터 버튼 */
+.filter-strip{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-bottom:12px}
+.filter-strip::-webkit-scrollbar{display:none}
+.fstrip-btn{flex:none;padding:6px 12px;border-radius:20px;border:1px solid var(--border2);background:none;font-family:var(--mono);font-size:11px;color:var(--text3);cursor:pointer;transition:all .2s;white-space:nowrap}
+.fstrip-btn.active{border-color:var(--cyan);background:rgba(0,245,255,.08);color:var(--cyan)}
+.fstrip-btn:hover:not(.active){border-color:var(--text2);color:var(--text2)}
+
+/* 그리드 / 리스트 토글 */
+.view-toggle{display:flex;gap:4px;margin-bottom:12px}
+.vtbtn{flex:1;padding:8px;border:1px solid var(--border2);border-radius:6px;background:none;font-size:14px;cursor:pointer;transition:all .2s;color:var(--text3)}
+.vtbtn.active{border-color:var(--cyan);background:rgba(0,245,255,.08);color:var(--cyan)}
+
+/* 이미지 그리드 */
+.notes-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+.notes-list-view{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+
+/* 노트 카드 (그리드) */
+.note-card{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer;transition:all .2s;position:relative}
+.note-card:hover{border-color:rgba(0,245,255,.3);transform:translateY(-2px)}
+.note-card-img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;transition:filter .3s}
+.note-card-img.scan{filter:contrast(1.6) brightness(1.15) grayscale(0.1)}
+.note-card-img.scan-strong{filter:contrast(2.2) brightness(1.3) grayscale(0.3)}
+.note-card-img.original{filter:none}
+.note-card-footer{padding:8px 10px;display:flex;align-items:center;justify-content:space-between}
+.note-card-name{font-size:11px;color:var(--text2);font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+.note-card-del{background:none;border:none;color:var(--text3);font-size:13px;cursor:pointer;padding:2px 4px;flex-shrink:0}
+.note-card-del:hover{color:var(--pink)}
+
+/* 노트 카드 (리스트) */
+.note-list-item{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;display:flex;gap:0;cursor:pointer;transition:all .2s}
+.note-list-item:hover{border-color:rgba(0,245,255,.3)}
+.note-list-thumb{width:80px;height:80px;object-fit:cover;flex-shrink:0}
+.note-list-info{flex:1;padding:10px 12px;min-width:0;display:flex;flex-direction:column;justify-content:space-between}
+.note-list-name{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.note-list-date{font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:3px}
+.note-list-tags{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap}
+.note-tag{font-size:9px;padding:2px 6px;border-radius:8px;background:rgba(0,245,255,.08);color:var(--cyan);border:1px solid rgba(0,245,255,.15);font-family:var(--mono)}
+.note-list-actions{display:flex;gap:6px;padding:10px 10px 10px 0;align-items:center;flex-shrink:0}
+.note-act-btn{width:30px;height:30px;border-radius:50%;background:none;border:1px solid var(--border2);color:var(--text2);font-size:12px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center}
+.note-act-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+.note-act-del:hover{border-color:var(--pink)!important;color:var(--pink)!important}
+
+/* 전체화면 모달 */
+.img-modal{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:500;display:none;flex-direction:column;align-items:center;justify-content:center}
+.img-modal.show{display:flex}
+.img-modal-img{max-width:100%;max-height:85vh;object-fit:contain;border-radius:8px;transition:filter .3s;touch-action:pinch-zoom}
+.img-modal-img.scan{filter:contrast(1.6) brightness(1.15) grayscale(0.1)}
+.img-modal-img.scan-strong{filter:contrast(2.2) brightness(1.3) grayscale(0.3)}
+.img-modal-controls{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;justify-content:center}
+.img-ctrl-btn{padding:8px 16px;border-radius:20px;border:1px solid var(--border2);background:rgba(255,255,255,.05);color:var(--text2);font-family:var(--mono);font-size:11px;cursor:pointer;transition:all .2s}
+.img-ctrl-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+.img-ctrl-btn.active{border-color:var(--cyan);background:rgba(0,245,255,.1);color:var(--cyan)}
+.img-modal-close{position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.1);border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.img-modal-nav{position:absolute;top:50%;transform:translateY(-50%);display:flex;justify-content:space-between;width:100%;padding:0 8px;pointer-events:none}
+.img-nav-btn{pointer-events:all;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.1);border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.img-nav-btn:hover{background:rgba(0,245,255,.2)}
+.img-modal-counter{font-family:var(--mono);font-size:11px;color:var(--text3);margin-top:8px}
+
+/* 빈 상태 */
+.notes-empty{text-align:center;padding:40px 16px;color:var(--text3);font-size:12px;font-family:var(--mono);line-height:2}
+.notes-empty-icon{font-size:40px;margin-bottom:10px;opacity:.4}
+
+/* AI 요약 결과 스타일 */
+.sum-section{margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.sum-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.sum-section-title{font-size:13px;font-weight:900;color:var(--cyan);margin-bottom:8px;display:flex;align-items:center;gap:6px;font-family:var(--mono);letter-spacing:1px}
+.sum-section-title::before{content:'//';opacity:.4}
+.sum-concept{margin-bottom:10px;padding:10px 12px;background:rgba(0,245,255,.04);border-left:3px solid var(--cyan);border-radius:0 8px 8px 0}
+.sum-concept-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
+.sum-concept-desc{font-size:12px;color:var(--text2);line-height:1.7}
+.sum-concept-ex{font-size:11px;color:var(--text3);margin-top:5px;padding:5px 8px;background:rgba(255,238,160,.04);border-radius:4px;font-family:var(--mono)}
+.sum-concept-ex::before{content:'예시: ';color:var(--yellow);font-weight:700}
+.sum-keyword-list{display:flex;flex-wrap:wrap;gap:6px}
+.sum-keyword{font-size:11px;padding:4px 10px;border-radius:14px;background:rgba(123,47,255,.12);color:var(--purple);border:1px solid rgba(123,47,255,.25);font-family:var(--mono)}
+.sum-exam-item{padding:8px 10px;background:rgba(255,0,110,.05);border:1px solid rgba(255,0,110,.15);border-radius:6px;margin-bottom:6px;font-size:12px;color:var(--text2);line-height:1.6}
+.sum-exam-q{font-weight:700;color:var(--pink);margin-bottom:3px;font-size:12px}
+
+/* 요약 보관함 카드 */
+.saved-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:13px 14px;margin-bottom:8px;cursor:pointer;transition:all .2s}
+.saved-card:hover{border-color:rgba(0,245,255,.3)}
+.saved-card-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
+.saved-card-subj{font-size:12px;font-weight:700;padding:3px 10px;border-radius:12px;background:rgba(0,245,255,.1);color:var(--cyan);font-family:var(--mono)}
+.saved-card-date{font-size:10px;color:var(--text3);font-family:var(--mono)}
+.saved-card-title{font-size:14px;font-weight:700;margin-bottom:4px}
+.saved-card-preview{font-size:11px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:var(--mono)}
+.saved-card-footer{display:flex;gap:6px;margin-top:10px}
+.saved-act-btn{padding:5px 12px;border-radius:14px;border:1px solid var(--border2);background:none;font-family:var(--mono);font-size:10px;color:var(--text3);cursor:pointer;transition:all .2s}
+.saved-act-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+.saved-act-del:hover{border-color:var(--pink)!important;color:var(--pink)!important}
+
+/* 보관함 탭 서브탭 active */
+.stbtn.active.saved-active{background:rgba(0,255,136,.15);color:var(--green)}
+
 /* ── PLANNER TAB ── */
 .cheer-banner{background:linear-gradient(135deg,rgba(255,238,160,.08),rgba(255,238,160,.03));border:1px solid rgba(255,238,160,.25);border-radius:12px;padding:14px 16px;margin-bottom:14px;text-align:center}
 .cheer-main{font-size:15px;font-weight:900;color:#ffe8a0;margin-bottom:3px}
@@ -452,13 +553,14 @@ input.s-inp:focus{border-color:var(--cyan)}
 <div id="toast"></div>
 
 <header class="hdr">
-  <div class="hdr-title">학교 서바이벌 치트키 v2.2</div>
+  <div class="hdr-title">학교 서바이벌 치트키 v2.5</div>
   <nav class="tabs">
     <button class="tbtn active" onclick="switchTab('meal',this)">🍱 급식</button>
     <button class="tbtn" onclick="switchTab('assign',this)">📝 수행평가</button>
     <button class="tbtn" onclick="switchTab('trans',this)">🖨️ 자아번역기</button>
     <button class="tbtn" onclick="switchTab('study',this)">🧠 학습카드</button>
     <button class="tbtn" onclick="switchTab('planner',this)">📅 플래너</button>
+    <button class="tbtn" onclick="switchTab('notes',this)">🗂️ 보관함</button>
   </nav>
 </header>
 
@@ -845,7 +947,148 @@ input.s-inp:focus{border-color:var(--cyan)}
 
 </div>
 
+<!-- ══════════ TAB 6: NOTES (보관함) ══════════ -->
+<div id="tab-notes" class="panel">
+
+  <div class="sec-title">🗂️ 프린트물 보관함</div>
+  <div class="sec-sub"># 사진 보관 + AI 요약기</div>
+
+  <!-- 서브 탭 -->
+  <div class="sub-tabs" style="margin-bottom:14px">
+    <button class="stbtn active analyze" id="nstbtn-photos" onclick="switchNotesTab('photos',this)">📸 사진 보관함</button>
+    <button class="stbtn grade" id="nstbtn-ai" onclick="switchNotesTab('ai',this)">🤖 AI 요약기</button>
+    <button class="stbtn" id="nstbtn-saved" onclick="switchNotesTab('saved',this)" style="flex:1;background:none;border:none;font-family:var(--main);font-size:12px;font-weight:700;color:var(--text3);cursor:pointer;text-align:center;transition:all .2s">📚 요약 보관함</button>
+  </div>
+
+  <!-- ── 사진 보관함 ── -->
+  <div id="nspanel-photos" class="stpanel active">
+    <div class="notes-upload-zone" id="notes-upload-zone">
+      <input type="file" id="notes-file-inp" accept="image/*" multiple onchange="handleNotesUpload(this)">
+      <div class="notes-upload-icon">📸</div>
+      <div class="notes-upload-txt">사진을 여러 장 한번에 올려봐</div>
+      <div class="notes-upload-sub">JPG · PNG · WEBP · 멀티 선택 가능</div>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:10px;align-items:center">
+      <div class="view-toggle" style="flex:none;width:80px">
+        <button class="vtbtn active" id="vt-grid" onclick="setViewMode('grid',this)" title="그리드">⊞</button>
+        <button class="vtbtn" id="vt-list" onclick="setViewMode('list',this)" title="리스트">☰</button>
+      </div>
+      <div class="filter-strip" style="flex:1">
+        <button class="fstrip-btn active" onclick="setImgFilter('original',this)">원본</button>
+        <button class="fstrip-btn" onclick="setImgFilter('scan',this)">📄 스캔</button>
+        <button class="fstrip-btn" onclick="setImgFilter('scan-strong',this)">📄 스캔 강</button>
+      </div>
+    </div>
+    <input class="tin" id="notes-search" placeholder="🔍 파일명 검색..." oninput="renderNotes()" style="margin-bottom:10px;--acc:var(--cyan)">
+    <div id="notes-container"></div>
+  </div>
+
+  <!-- ── AI 요약기 ── -->
+  <div id="nspanel-ai" class="stpanel">
+
+    <!-- 이미지 업로드 -->
+    <div class="card" style="--acc:var(--purple)">
+      <div class="clabel" style="color:var(--purple)">STEP 1 · 프린트 사진 업로드</div>
+      <div class="notes-upload-zone" id="ai-upload-zone" style="margin-bottom:0">
+        <input type="file" id="ai-file-inp" accept="image/*" onchange="handleAiUpload(this)">
+        <div class="notes-upload-icon" id="ai-upload-icon">📄</div>
+        <div class="notes-upload-txt" id="ai-upload-txt">프린트물 사진을 올려봐</div>
+        <div class="notes-upload-sub">선명할수록 OCR 정확도 높아짐</div>
+      </div>
+      <div id="ai-img-preview" style="display:none;margin-top:10px;text-align:center">
+        <img id="ai-preview-img" style="max-width:100%;max-height:200px;border-radius:8px;border:1px solid var(--border)" src="" alt="">
+        <div style="font-size:11px;color:var(--green);font-family:var(--mono);margin-top:6px" id="ai-preview-name"></div>
+      </div>
+    </div>
+
+    <!-- OCR + 과목 설정 -->
+    <div class="card" style="--acc:var(--cyan)">
+      <div class="clabel">STEP 2 · 설정</div>
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <div style="flex:1">
+          <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:5px">과목명</div>
+          <input class="tin" id="ai-subj-inp" placeholder="예) 생물, 수학" style="--acc:var(--cyan);margin-bottom:0">
+        </div>
+        <div style="flex:1">
+          <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:5px">요약 스타일</div>
+          <select id="ai-style-sel" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:10px;font-family:var(--main);font-size:13px;outline:none">
+            <option value="concept">개념 정리형</option>
+            <option value="exam">시험 대비형</option>
+            <option value="simple">심플 요약</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- OCR 텍스트 직접 입력 (대안) -->
+      <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:5px">직접 텍스트 입력 (OCR 대안)</div>
+      <textarea class="tin" id="ai-text-inp" style="--acc:var(--cyan);min-height:80px" placeholder="OCR이 느리면 여기에 직접 텍스트를 붙여넣어도 돼!&#10;&#10;예) 세포의 구조: 핵, 미토콘드리아, 세포막..."></textarea>
+
+      <button class="btn btn-cyan" id="ai-run-btn" onclick="runAiSummary()" style="font-size:13px;padding:11px">🤖 AI 요약 시작</button>
+    </div>
+
+    <!-- OCR 진행 상태 -->
+    <div id="ocr-status" style="display:none;margin-bottom:10px">
+      <div class="card" style="--acc:var(--yellow)">
+        <div class="clabel" style="color:var(--yellow)">OCR 진행 중</div>
+        <div style="background:var(--bg3);border-radius:6px;height:6px;overflow:hidden;margin-bottom:6px">
+          <div id="ocr-prog-bar" style="height:100%;background:var(--yellow);border-radius:6px;transition:width .3s;width:0%"></div>
+        </div>
+        <div id="ocr-prog-txt" style="font-family:var(--mono);font-size:11px;color:var(--text3)">이미지 분석 중...</div>
+      </div>
+    </div>
+
+    <!-- 결과 -->
+    <div id="ai-result-box" style="display:none">
+
+      <!-- 추출된 원본 텍스트 -->
+      <div class="card" style="--acc:var(--text3)">
+        <div class="clabel" style="color:var(--text3)">OCR 추출 텍스트 (원본)</div>
+        <textarea id="ai-ocr-result" class="tin" style="min-height:80px;font-size:11px;color:var(--text3);--acc:var(--text3)" readonly></textarea>
+      </div>
+
+      <!-- AI 요약 결과 -->
+      <div class="card" style="--acc:var(--cyan)">
+        <div class="clabel">AI 요약 결과</div>
+        <div id="ai-summary-content" style="font-size:13px;line-height:1.8"></div>
+
+        <!-- 저장 + 프린트 버튼 -->
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button class="btn btn-cyan" onclick="saveAiSummary()" style="flex:1;padding:10px;font-size:12px;margin-top:0">💾 요약 저장</button>
+          <button class="btn btn-purple" onclick="printAiSummary()" style="flex:1;padding:10px;font-size:12px;margin-top:0;background:var(--purple)">🖨️ 인쇄/PDF</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── 요약 보관함 ── -->
+  <div id="nspanel-saved" class="stpanel">
+    <div style="margin-bottom:10px">
+      <input class="tin" id="saved-search" placeholder="🔍 과목명, 제목 검색..." oninput="renderSavedSummaries()" style="--acc:var(--cyan)">
+    </div>
+    <div id="saved-summaries-container"></div>
+  </div>
+
+</div>
+
 </div><!-- /content -->
+
+<!-- 이미지 전체화면 모달 -->
+<div class="img-modal" id="img-modal">
+  <button class="img-modal-close" onclick="closeImgModal()">✕</button>
+  <div class="img-modal-nav">
+    <button class="img-nav-btn" onclick="imgModalNav(-1)">‹</button>
+    <button class="img-nav-btn" onclick="imgModalNav(1)">›</button>
+  </div>
+  <img class="img-modal-img" id="img-modal-img" src="" alt="">
+  <div class="img-modal-counter" id="img-modal-counter"></div>
+  <div class="img-modal-controls">
+    <button class="img-ctrl-btn active" onclick="setModalFilter('original',this)">원본</button>
+    <button class="img-ctrl-btn" onclick="setModalFilter('scan',this)">📄 스캔</button>
+    <button class="img-ctrl-btn" onclick="setModalFilter('scan-strong',this)">📄 스캔 강</button>
+    <button class="img-ctrl-btn" onclick="downloadImg()">⬇ 저장</button>
+  </div>
+</div>
 
 <script>
 // ══════════════════════════════════════════
@@ -919,6 +1162,7 @@ function init() {
   setupDragDrop();
   buildWeekTabs();
   initStudy();
+  initNotes();
 
   // 캐시 복원
   const cached = localStorage.getItem('ss_meal_cache');
@@ -2080,7 +2324,207 @@ function initPlanner() {
 
 init();
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" onload="initPlanner()"></script>
+// ══════════════════════════════════════════
+//  NOTES (프린트물 보관함)
+// ══════════════════════════════════════════
+let notes       = []; // { id, name, dataUrl, date }
+let notesFilter = 'original';
+let notesView   = 'grid';
+let modalIdx    = 0;
+let modalFilter = 'original';
+
+function initNotes() {
+  // localStorage에서 복원 (용량 초과 방지: 최대 30장)
+  try {
+    const saved = localStorage.getItem('ss_notes');
+    if (saved) notes = JSON.parse(saved);
+  } catch(e) { notes = []; }
+  renderNotes();
+  setupNotesDragDrop();
+  setupAiDragDrop();
+}
+
+function saveNotes() {
+  try {
+    localStorage.setItem('ss_notes', JSON.stringify(notes));
+  } catch(e) {
+    showToast('⚠ 저장 용량 초과! 일부 사진을 삭제해봐');
+  }
+}
+
+function handleNotesUpload(input) {
+  const files = [...input.files];
+  if (!files.length) return;
+  let loaded = 0;
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      notes.unshift({
+        id: Date.now().toString() + Math.random().toString(36).slice(2),
+        name: file.name.replace(/\.[^/.]+$/, ''),
+        dataUrl: e.target.result,
+        date: new Date().toLocaleDateString('ko-KR')
+      });
+      loaded++;
+      if (loaded === files.length) {
+        if (notes.length > 50) notes = notes.slice(0, 50); // 최대 50장
+        saveNotes();
+        renderNotes();
+        showToast(`📸 ${files.length}장 추가됨!`);
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value = '';
+}
+
+function setupNotesDragDrop() {
+  const zone = document.getElementById('notes-upload-zone');
+  if (!zone) return;
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault(); zone.classList.remove('dragover');
+    const files = [...e.dataTransfer.files].filter(f => f.type.startsWith('image/'));
+    if (!files.length) return;
+    const dt = new DataTransfer();
+    files.forEach(f => dt.items.add(f));
+    const inp = document.getElementById('notes-file-inp');
+    inp.files = dt.files;
+    handleNotesUpload(inp);
+  });
+}
+
+function setImgFilter(f, btn) {
+  notesFilter = f;
+  document.querySelectorAll('.fstrip-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderNotes();
+}
+
+function setViewMode(mode, btn) {
+  notesView = mode;
+  document.querySelectorAll('.vtbtn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderNotes();
+}
+
+function getFilteredNotes() {
+  const q = (document.getElementById('notes-search')?.value || '').toLowerCase();
+  if (!q) return notes;
+  return notes.filter(n => n.name.toLowerCase().includes(q));
+}
+
+function renderNotes() {
+  const el = document.getElementById('notes-container');
+  if (!el) return;
+  const filtered = getFilteredNotes();
+
+  if (!notes.length) {
+    el.innerHTML = `<div class="notes-empty"><div class="notes-empty-icon">🗂️</div>아직 사진이 없어!<br>위에서 프린트물 사진을 올려봐<br><span style="font-size:10px">여러 장 한번에 선택 가능</span></div>`;
+    return;
+  }
+  if (!filtered.length) {
+    el.innerHTML = `<div class="notes-empty"><div class="notes-empty-icon">🔍</div>검색 결과 없음</div>`;
+    return;
+  }
+
+  if (notesView === 'grid') {
+    el.innerHTML = `<div class="notes-grid">${filtered.map((n,i) => `
+      <div class="note-card" onclick="openImgModal(${notes.indexOf(n)})">
+        <img class="note-card-img ${notesFilter}" src="${n.dataUrl}" alt="${n.name}" loading="lazy">
+        <div class="note-card-footer">
+          <span class="note-card-name">${n.name}</span>
+          <button class="note-card-del" onclick="deleteNote('${n.id}',event)">✕</button>
+        </div>
+      </div>`).join('')}</div>`;
+  } else {
+    el.innerHTML = `<div class="notes-list-view">${filtered.map((n,i) => `
+      <div class="note-list-item" onclick="openImgModal(${notes.indexOf(n)})">
+        <img class="note-list-thumb ${notesFilter}" src="${n.dataUrl}" alt="${n.name}" loading="lazy">
+        <div class="note-list-info">
+          <div class="note-list-name">${n.name}</div>
+          <div class="note-list-date">${n.date}</div>
+        </div>
+        <div class="note-list-actions">
+          <button class="note-act-btn note-act-del" onclick="deleteNote('${n.id}',event)" title="삭제">✕</button>
+        </div>
+      </div>`).join('')}</div>`;
+  }
+}
+
+function deleteNote(id, e) {
+  e.stopPropagation();
+  notes = notes.filter(n => n.id !== id);
+  saveNotes();
+  renderNotes();
+  showToast('삭제됨');
+}
+
+// ── 이미지 모달 ──
+function openImgModal(idx) {
+  modalIdx = idx;
+  modalFilter = notesFilter;
+  updateImgModal();
+  document.getElementById('img-modal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeImgModal() {
+  document.getElementById('img-modal').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+function updateImgModal() {
+  const n = notes[modalIdx];
+  if (!n) return;
+  const img = document.getElementById('img-modal-img');
+  img.src = n.dataUrl;
+  img.className = `img-modal-img ${modalFilter}`;
+  document.getElementById('img-modal-counter').textContent = `${modalIdx + 1} / ${notes.length} — ${n.name}`;
+}
+
+function imgModalNav(dir) {
+  modalIdx = (modalIdx + dir + notes.length) % notes.length;
+  updateImgModal();
+}
+
+function setModalFilter(f, btn) {
+  modalFilter = f;
+  document.querySelectorAll('.img-ctrl-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('img-modal-img').className = `img-modal-img ${f}`;
+}
+
+function downloadImg() {
+  const n = notes[modalIdx];
+  if (!n) return;
+  const a = document.createElement('a');
+  a.href = n.dataUrl;
+  a.download = n.name + '.jpg';
+  a.click();
+}
+
+// 모달 키보드 & 스와이프
+document.addEventListener('keydown', e => {
+  const modal = document.getElementById('img-modal');
+  if (!modal.classList.contains('show')) return;
+  if (e.key === 'ArrowLeft')  imgModalNav(-1);
+  if (e.key === 'ArrowRight') imgModalNav(1);
+  if (e.key === 'Escape')     closeImgModal();
+});
+
+// 스와이프 지원
+let touchStartX = 0;
+document.getElementById('img-modal')?.addEventListener('touchstart', e => {
+  touchStartX = e.touches[0].clientX;
+}, {passive:true});
+document.getElementById('img-modal')?.addEventListener('touchend', e => {
+  const diff = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(diff) > 50) imgModalNav(diff < 0 ? 1 : -1);
+}, {passive:true});
+
+
 <script>
 // ══════════════════════════════════════════
 //  PLANNER — 시험 일정 + 성적 관리
@@ -2285,5 +2729,338 @@ function updateChart() {
   });
 }
 </script>
+// ══════════════════════════════════════════
+//  NOTES SUB-TAB SWITCH
+// ══════════════════════════════════════════
+function switchNotesTab(id, btn) {
+  ['nspanel-photos','nspanel-ai','nspanel-saved'].forEach(p => {
+    const el = document.getElementById(p);
+    if (el) el.classList.remove('active');
+  });
+  ['nstbtn-photos','nstbtn-ai','nstbtn-saved'].forEach(b => {
+    const el = document.getElementById(b);
+    if (el) el.classList.remove('active','analyze','grade');
+  });
+  const panel = document.getElementById('nspanel-'+id);
+  if (panel) panel.classList.add('active');
+  if (btn) {
+    btn.classList.add('active');
+    if (id==='photos') btn.classList.add('analyze');
+    if (id==='ai') btn.classList.add('grade');
+  }
+  if (id==='saved') renderSavedSummaries();
+}
+
+// ══════════════════════════════════════════
+//  AI 요약기
+// ══════════════════════════════════════════
+let aiImgData   = null;
+let aiSummaryData = null;
+let savedSummaries = JSON.parse(localStorage.getItem('ss_summaries') || '[]');
+
+function handleAiUpload(input) {
+  const file = input.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    aiImgData = e.target.result;
+    document.getElementById('ai-preview-img').src = aiImgData;
+    document.getElementById('ai-preview-name').textContent = '✓ ' + file.name;
+    document.getElementById('ai-img-preview').style.display = 'block';
+    document.getElementById('ai-upload-icon').textContent = '✅';
+    document.getElementById('ai-upload-txt').textContent = file.name;
+    showToast('이미지 로드됨! AI 요약 시작을 눌러봐');
+  };
+  reader.readAsDataURL(file);
+}
+
+async function runAiSummary() {
+  const directText = document.getElementById('ai-text-inp').value.trim();
+  const subj       = document.getElementById('ai-subj-inp').value.trim() || '미지정';
+  const style      = document.getElementById('ai-style-sel').value;
+
+  if (!apiKey) { alert('API 키를 먼저 입력해주세요! (수행평가 탭)'); return; }
+  if (!aiImgData && !directText) { alert('이미지를 업로드하거나 텍스트를 입력해주세요!'); return; }
+
+  const btn = document.getElementById('ai-run-btn');
+  btn.disabled = true; btn.textContent = '처리 중...';
+  document.getElementById('ai-result-box').style.display = 'none';
+
+  let extractedText = directText;
+
+  // OCR — Tesseract.js 사용
+  if (aiImgData && !directText) {
+    document.getElementById('ocr-status').style.display = 'block';
+    try {
+      // Tesseract.js 동적 로드
+      if (typeof Tesseract === 'undefined') {
+        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.1.1/tesseract.min.js');
+      }
+      const result = await Tesseract.recognize(aiImgData, 'kor+eng', {
+        logger: m => {
+          if (m.status === 'recognizing text') {
+            const pct = Math.round(m.progress * 100);
+            document.getElementById('ocr-prog-bar').style.width = pct + '%';
+            document.getElementById('ocr-prog-txt').textContent = `텍스트 인식 중... ${pct}%`;
+          }
+        }
+      });
+      extractedText = result.data.text.trim();
+      document.getElementById('ai-text-inp').value = extractedText;
+    } catch(e) {
+      showToast('OCR 오류: ' + e.message.slice(0,30));
+      document.getElementById('ocr-prog-txt').textContent = 'OCR 실패 — 텍스트 직접 입력해봐';
+    }
+    document.getElementById('ocr-status').style.display = 'none';
+  }
+
+  document.getElementById('ai-ocr-result').value = extractedText || '(텍스트 없음)';
+
+  if (!extractedText) {
+    btn.disabled = false; btn.textContent = '🤖 AI 요약 시작';
+    showToast('텍스트를 추출할 수 없어. 직접 입력해봐!');
+    return;
+  }
+
+  // AI 요약
+  const stylePrompts = {
+    concept: `다음 텍스트를 공부용 개념 정리 노트로 요약해줘. 반드시 아래 JSON 형식으로만 출력해:
+{"title":"요약 제목","subject":"${subj}","sections":[{"type":"concept","name":"개념명","desc":"설명","example":"예시(없으면 null)"}],"keywords":["핵심 키워드들"],"one_line":"전체 내용 한 줄 요약"}`,
+    exam: `다음 텍스트를 시험 대비 요약 노트로 만들어줘. 반드시 아래 JSON 형식으로만 출력해:
+{"title":"요약 제목","subject":"${subj}","sections":[{"type":"concept","name":"개념명","desc":"설명","example":"예시(없으면 null)"}],"exam_tips":[{"q":"예상 문제","a":"핵심 답안"}],"keywords":["핵심 키워드들"],"one_line":"전체 내용 한 줄 요약"}`,
+    simple: `다음 텍스트를 심플하게 요약해줘. 반드시 아래 JSON 형식으로만 출력해:
+{"title":"요약 제목","subject":"${subj}","sections":[{"type":"concept","name":"핵심 포인트","desc":"내용","example":null}],"keywords":["핵심 키워드들"],"one_line":"전체 내용 한 줄 요약"}`
+  };
+
+  try {
+    const msgs = aiImgData && !directText
+      ? [{ role:'user', content:[{type:'image_url',image_url:{url:aiImgData}},{type:'text',text:stylePrompts[style]+'\n\n위 이미지의 텍스트:\n'+extractedText}] }]
+      : [{ role:'user', content: stylePrompts[style] + '\n\n[텍스트]\n' + extractedText }];
+
+    const res = await fetch('http://10.1.1.60:8000/v1/chat/completions', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':`Bearer ${apiKey}`},
+      body: JSON.stringify({ model:'gemma-4-26B-A4B-it-RotorQuant-MLX-8bit', messages:[
+        { role:'system', content:'너는 학생의 프린트물을 공부용 노트로 요약하는 AI야. 반드시 JSON만 출력해.' },
+        ...msgs
+      ]})
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    const raw = data.choices[0].message.content.replace(/```json|```/g,'').trim();
+    aiSummaryData = JSON.parse(raw);
+    aiSummaryData.rawText  = extractedText;
+    aiSummaryData.style    = style;
+    aiSummaryData.imgData  = aiImgData;
+    renderAiSummary(aiSummaryData);
+    document.getElementById('ai-result-box').style.display = 'block';
+    showToast('AI 요약 완료! 🎉');
+  } catch(e) {
+    showToast('AI 오류: ' + e.message.slice(0,30));
+  }
+
+  btn.disabled = false; btn.textContent = '🤖 AI 요약 시작';
+}
+
+function renderAiSummary(d) {
+  const el = document.getElementById('ai-summary-content');
+  let html = `<div style="font-size:16px;font-weight:900;color:var(--cyan);margin-bottom:4px">${d.title}</div>
+    <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:14px">${d.subject} · ${d.one_line}</div>`;
+
+  if (d.sections && d.sections.length) {
+    html += `<div class="sum-section"><div class="sum-section-title">핵심 개념</div>`;
+    d.sections.forEach(s => {
+      html += `<div class="sum-concept">
+        <div class="sum-concept-name">${s.name}</div>
+        <div class="sum-concept-desc">${s.desc}</div>
+        ${s.example ? `<div class="sum-concept-ex">${s.example}</div>` : ''}
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  if (d.keywords && d.keywords.length) {
+    html += `<div class="sum-section"><div class="sum-section-title">핵심 키워드</div>
+      <div class="sum-keyword-list">${d.keywords.map(k=>`<span class="sum-keyword">#${k}</span>`).join('')}</div>
+    </div>`;
+  }
+
+  if (d.exam_tips && d.exam_tips.length) {
+    html += `<div class="sum-section"><div class="sum-section-title">시험 예상 문제</div>`;
+    d.exam_tips.forEach(t => {
+      html += `<div class="sum-exam-item"><div class="sum-exam-q">Q. ${t.q}</div>${t.a}</div>`;
+    });
+    html += `</div>`;
+  }
+
+  el.innerHTML = html;
+}
+
+function saveAiSummary() {
+  if (!aiSummaryData) { showToast('먼저 AI 요약을 실행해봐!'); return; }
+  savedSummaries.unshift({
+    id: Date.now().toString(),
+    title:    aiSummaryData.title,
+    subject:  aiSummaryData.subject,
+    oneLine:  aiSummaryData.one_line,
+    date:     new Date().toLocaleDateString('ko-KR'),
+    data:     aiSummaryData
+  });
+  if (savedSummaries.length > 30) savedSummaries = savedSummaries.slice(0,30);
+  localStorage.setItem('ss_summaries', JSON.stringify(savedSummaries));
+  showToast('요약 보관함에 저장됨! 📚');
+}
+
+function printAiSummary() {
+  if (!aiSummaryData) { showToast('먼저 AI 요약을 실행해봐!'); return; }
+  const d = aiSummaryData;
+  const now = new Date().toLocaleDateString('ko-KR');
+
+  let conceptsHtml = '';
+  (d.sections||[]).forEach(s => {
+    conceptsHtml += `<div class="concept-block">
+      <div class="concept-name">${s.name}</div>
+      <div class="concept-desc">${s.desc}</div>
+      ${s.example ? `<div class="concept-ex"><strong>예시:</strong> ${s.example}</div>` : ''}
+    </div>`;
+  });
+
+  let keywordsHtml = (d.keywords||[]).map(k=>`<span class="kw">#${k}</span>`).join('');
+
+  let examHtml = '';
+  if (d.exam_tips && d.exam_tips.length) {
+    examHtml = `<div class="section"><div class="section-title">📝 시험 예상 문제</div>
+      ${d.exam_tips.map(t=>`<div class="exam-item"><div class="exam-q">Q. ${t.q}</div><div class="exam-a">${t.a}</div></div>`).join('')}
+    </div>`;
+  }
+
+  const w = window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html lang="ko"><head>
+<meta charset="UTF-8">
+<title>${d.title} — ${d.subject}</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Noto Sans KR',sans-serif;background:#fff;color:#1a1a2e;padding:0;font-size:13px;line-height:1.8}
+  .print-header{background:linear-gradient(135deg,#0a0a2e,#1a1a4e);color:#fff;padding:20px 28px;display:flex;justify-content:space-between;align-items:center}
+  .print-title{font-size:20px;font-weight:900;color:#00f5ff}
+  .print-meta{font-size:11px;color:#9999bb;font-family:monospace;text-align:right;line-height:1.8}
+  .print-body{padding:24px 28px}
+  .one-line{font-size:13px;color:#555;background:#f8f8ff;padding:10px 14px;border-radius:6px;margin-bottom:20px;border-left:3px solid #7b2fff}
+  .section{margin-bottom:22px}
+  .section-title{font-size:14px;font-weight:900;color:#fff;background:linear-gradient(90deg,#7b2fff,#00f5ff);padding:7px 14px;border-radius:5px;margin-bottom:12px;letter-spacing:1px}
+  .concept-block{padding:10px 14px;margin-bottom:10px;border-radius:6px;background:#f8f8ff;border-left:3px solid #00f5ff}
+  .concept-name{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:4px}
+  .concept-desc{color:#333;line-height:1.8}
+  .concept-ex{font-size:12px;color:#666;margin-top:6px;padding:5px 8px;background:#fffff0;border-radius:4px}
+  .kw{font-size:11px;padding:3px 9px;border-radius:12px;background:#f0f0ff;color:#7b2fff;border:1px solid #ddd;margin:2px;display:inline-block;font-family:monospace}
+  .exam-item{padding:8px 12px;background:#fff0f5;border-radius:6px;margin-bottom:6px;border-left:3px solid #ff006e}
+  .exam-q{font-weight:700;color:#ff006e;font-size:12px;margin-bottom:3px}
+  .exam-a{color:#333;font-size:12px}
+  .print-footer{padding:14px 28px;background:#f8f8ff;border-top:2px solid #e8e8ff;display:flex;justify-content:space-between;font-size:11px;color:#9999bb;font-family:monospace;margin-top:20px}
+  .footer-badge{background:#7b2fff;color:#fff;padding:2px 8px;border-radius:8px;font-size:10px}
+  .btn-bar{position:fixed;bottom:20px;right:20px;display:flex;gap:8px;z-index:999}
+  .do-print{padding:11px 18px;background:linear-gradient(135deg,#7b2fff,#00f5ff);color:#fff;border:none;border-radius:9px;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(123,47,255,.4)}
+  .do-close{padding:11px 14px;background:#fff;border:2px solid #e8e8ff;border-radius:9px;cursor:pointer;font-size:13px}
+  @media print{.btn-bar{display:none}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style></head><body>
+<div class="print-header">
+  <div><div class="print-title">📚 ${d.title}</div><div style="font-size:12px;color:#7b2fff;margin-top:4px;font-weight:700">${d.subject}</div></div>
+  <div class="print-meta"><div>성광고등학교</div><div>${now}</div><div>TENPEAK AI 요약</div></div>
+</div>
+<div class="print-body">
+  <div class="one-line">${d.one_line}</div>
+  <div class="section"><div class="section-title">📖 핵심 개념</div>${conceptsHtml}</div>
+  ${keywordsHtml ? `<div class="section"><div class="section-title">🔑 핵심 키워드</div><div style="padding:10px 0">${keywordsHtml}</div></div>` : ''}
+  ${examHtml}
+</div>
+<div class="print-footer"><span>성광고등학교 · ${d.subject} · ${now}</span><span class="footer-badge">TENPEAK</span></div>
+<div class="btn-bar">
+  <button class="do-close" onclick="window.close()">✕</button>
+  <button class="do-print" onclick="window.print()">🖨️ 인쇄 / PDF 저장</button>
+</div>
+</body></html>`);
+  w.document.close();
+}
+
+// ── 요약 보관함 ──
+function renderSavedSummaries() {
+  const el = document.getElementById('saved-summaries-container');
+  if (!el) return;
+  const q = (document.getElementById('saved-search')?.value||'').toLowerCase();
+  const filtered = q
+    ? savedSummaries.filter(s => s.title.toLowerCase().includes(q) || s.subject.toLowerCase().includes(q))
+    : savedSummaries;
+
+  if (!filtered.length) {
+    el.innerHTML = `<div class="notes-empty"><div class="notes-empty-icon">📚</div>저장된 요약 없음<br>AI 요약기에서 요약 후 저장해봐!</div>`;
+    return;
+  }
+
+  el.innerHTML = filtered.map(s => `
+    <div class="saved-card">
+      <div class="saved-card-head">
+        <span class="saved-card-subj">${s.subject}</span>
+        <span class="saved-card-date">${s.date}</span>
+      </div>
+      <div class="saved-card-title">${s.title}</div>
+      <div class="saved-card-preview">${s.oneLine}</div>
+      <div class="saved-card-footer">
+        <button class="saved-act-btn" onclick="viewSavedSummary('${s.id}')">👁 보기</button>
+        <button class="saved-act-btn" onclick="printSavedSummary('${s.id}')">🖨️ 인쇄</button>
+        <button class="saved-act-btn saved-act-del" onclick="deleteSavedSummary('${s.id}')">✕ 삭제</button>
+      </div>
+    </div>`).join('');
+}
+
+function viewSavedSummary(id) {
+  const s = savedSummaries.find(s=>s.id===id);
+  if (!s) return;
+  aiSummaryData = s.data;
+  switchNotesTab('ai', document.getElementById('nstbtn-ai'));
+  document.getElementById('ai-result-box').style.display = 'block';
+  renderAiSummary(s.data);
+  document.getElementById('ai-ocr-result').value = s.data.rawText || '';
+}
+
+function printSavedSummary(id) {
+  const s = savedSummaries.find(s=>s.id===id);
+  if (!s) return;
+  aiSummaryData = s.data;
+  printAiSummary();
+}
+
+function deleteSavedSummary(id) {
+  savedSummaries = savedSummaries.filter(s=>s.id!==id);
+  localStorage.setItem('ss_summaries', JSON.stringify(savedSummaries));
+  renderSavedSummaries();
+  showToast('삭제됨');
+}
+
+// 동적 스크립트 로더
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = src; s.onload = resolve; s.onerror = reject;
+    document.head.appendChild(s);
+  });
+}
+
+// AI 업로드 존 드래그드롭
+function setupAiDragDrop() {
+  const zone = document.getElementById('ai-upload-zone');
+  if (!zone) return;
+  zone.addEventListener('dragover', e=>{e.preventDefault();zone.classList.add('dragover');});
+  zone.addEventListener('dragleave',()=>zone.classList.remove('dragover'));
+  zone.addEventListener('drop',e=>{
+    e.preventDefault();zone.classList.remove('dragover');
+    const f=e.dataTransfer.files[0];
+    if(f&&f.type.startsWith('image/')){
+      const inp=document.getElementById('ai-file-inp');
+      const dt=new DataTransfer();dt.items.add(f);inp.files=dt.files;handleAiUpload(inp);
+    }
+  });
+}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" onload="initPlanner()"></script>
 </body>
 </html>
