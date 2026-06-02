@@ -553,14 +553,13 @@ input.s-inp:focus{border-color:var(--cyan)}
 <div id="toast"></div>
 
 <header class="hdr">
-  <div class="hdr-title">학교 서바이벌 치트키 v2.5</div>
+  <div class="hdr-title">학교 서바이벌 치트키 v2.6</div>
   <nav class="tabs">
     <button class="tbtn active" onclick="switchTab('meal',this)">🍱 급식</button>
     <button class="tbtn" onclick="switchTab('assign',this)">📝 수행평가</button>
     <button class="tbtn" onclick="switchTab('trans',this)">🖨️ 자아번역기</button>
     <button class="tbtn" onclick="switchTab('study',this)">🧠 학습카드</button>
     <button class="tbtn" onclick="switchTab('planner',this)">📅 플래너</button>
-    <button class="tbtn" onclick="switchTab('notes',this)">🗂️ 보관함</button>
   </nav>
 </header>
 
@@ -939,148 +938,8 @@ input.s-inp:focus{border-color:var(--cyan)}
 
 </div>
 
-<!-- ══════════ TAB 6: NOTES (보관함) ══════════ -->
-<div id="tab-notes" class="panel">
-
-  <div class="sec-title">🗂️ 보관함</div>
-  <div class="sec-sub"># 사진 보관 + AI 요약기 + 요약 보관함</div>
-
-  <!-- 서브 탭 -->
-  <div class="sub-tabs" style="margin-bottom:14px">
-    <button class="stbtn active analyze" id="nstbtn-photos" onclick="switchNotesTab('photos',this)">📸 사진</button>
-    <button class="stbtn grade" id="nstbtn-ai" onclick="switchNotesTab('ai',this)">🤖 AI 요약</button>
-    <button class="stbtn analyze" id="nstbtn-saved" onclick="switchNotesTab('saved',this)">📚 보관함</button>
-  </div>
-
-  <!-- ── 사진 보관함 ── -->
-  <div id="nspanel-photos" class="stpanel active">
-    <div class="notes-upload-zone" id="notes-upload-zone">
-      <input type="file" id="notes-file-inp" accept="image/*" multiple onchange="handleNotesUpload(this)">
-      <div class="notes-upload-icon">📸</div>
-      <div class="notes-upload-txt">사진을 여러 장 한번에 올려봐</div>
-      <div class="notes-upload-sub">JPG · PNG · WEBP · 멀티 선택 가능</div>
-    </div>
-    <div style="display:flex;gap:8px;margin-bottom:10px;align-items:center">
-      <div class="view-toggle" style="flex:none;width:80px">
-        <button class="vtbtn active" id="vt-grid" onclick="setViewMode('grid',this)" title="그리드">⊞</button>
-        <button class="vtbtn" id="vt-list" onclick="setViewMode('list',this)" title="리스트">☰</button>
-      </div>
-      <div class="filter-strip" style="flex:1">
-        <button class="fstrip-btn active" onclick="setImgFilter('original',this)">원본</button>
-        <button class="fstrip-btn" onclick="setImgFilter('scan',this)">📄 스캔</button>
-        <button class="fstrip-btn" onclick="setImgFilter('scan-strong',this)">📄 스캔 강</button>
-      </div>
-    </div>
-    <input class="tin" id="notes-search" placeholder="🔍 파일명 검색..." oninput="renderNotes()" style="margin-bottom:10px;--acc:var(--cyan)">
-    <div id="notes-container"></div>
-  </div>
-
-  <!-- ── AI 요약기 ── -->
-  <div id="nspanel-ai" class="stpanel">
-
-    <!-- 이미지 업로드 -->
-    <div class="card" style="--acc:var(--purple)">
-      <div class="clabel" style="color:var(--purple)">STEP 1 · 프린트 사진 업로드</div>
-      <div class="notes-upload-zone" id="ai-upload-zone" style="margin-bottom:0">
-        <input type="file" id="ai-file-inp" accept="image/*" onchange="handleAiUpload(this)">
-        <div class="notes-upload-icon" id="ai-upload-icon">📄</div>
-        <div class="notes-upload-txt" id="ai-upload-txt">프린트물 사진을 올려봐</div>
-        <div class="notes-upload-sub">선명할수록 OCR 정확도 높아짐</div>
-      </div>
-      <div id="ai-img-preview" style="display:none;margin-top:10px;text-align:center">
-        <img id="ai-preview-img" style="max-width:100%;max-height:200px;border-radius:8px;border:1px solid var(--border)" src="" alt="">
-        <div style="font-size:11px;color:var(--green);font-family:var(--mono);margin-top:6px" id="ai-preview-name"></div>
-      </div>
-    </div>
-
-    <!-- OCR + 과목 설정 -->
-    <div class="card" style="--acc:var(--cyan)">
-      <div class="clabel">STEP 2 · 설정</div>
-      <div style="display:flex;gap:8px;margin-bottom:10px">
-        <div style="flex:1">
-          <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:5px">과목명</div>
-          <input class="tin" id="ai-subj-inp" placeholder="예) 생물, 수학" style="--acc:var(--cyan);margin-bottom:0">
-        </div>
-        <div style="flex:1">
-          <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:5px">요약 스타일</div>
-          <select id="ai-style-sel" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:10px;font-family:var(--main);font-size:13px;outline:none">
-            <option value="concept">개념 정리형</option>
-            <option value="exam">시험 대비형</option>
-            <option value="simple">심플 요약</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- OCR 텍스트 직접 입력 (대안) -->
-      <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:5px">직접 텍스트 입력 (OCR 대안)</div>
-      <textarea class="tin" id="ai-text-inp" style="--acc:var(--cyan);min-height:80px" placeholder="OCR이 느리면 여기에 직접 텍스트를 붙여넣어도 돼!&#10;&#10;예) 세포의 구조: 핵, 미토콘드리아, 세포막..."></textarea>
-
-      <button class="btn btn-cyan" id="ai-run-btn" onclick="runAiSummary()" style="font-size:13px;padding:11px">🤖 AI 요약 시작</button>
-    </div>
-
-    <!-- OCR 진행 상태 -->
-    <div id="ocr-status" style="display:none;margin-bottom:10px">
-      <div class="card" style="--acc:var(--yellow)">
-        <div class="clabel" style="color:var(--yellow)">OCR 진행 중</div>
-        <div style="background:var(--bg3);border-radius:6px;height:6px;overflow:hidden;margin-bottom:6px">
-          <div id="ocr-prog-bar" style="height:100%;background:var(--yellow);border-radius:6px;transition:width .3s;width:0%"></div>
-        </div>
-        <div id="ocr-prog-txt" style="font-family:var(--mono);font-size:11px;color:var(--text3)">이미지 분석 중...</div>
-      </div>
-    </div>
-
-    <!-- 결과 -->
-    <div id="ai-result-box" style="display:none">
-
-      <!-- 추출된 원본 텍스트 -->
-      <div class="card" style="--acc:var(--text3)">
-        <div class="clabel" style="color:var(--text3)">OCR 추출 텍스트 (원본)</div>
-        <textarea id="ai-ocr-result" class="tin" style="min-height:80px;font-size:11px;color:var(--text3);--acc:var(--text3)" readonly></textarea>
-      </div>
-
-      <!-- AI 요약 결과 -->
-      <div class="card" style="--acc:var(--cyan)">
-        <div class="clabel">AI 요약 결과</div>
-        <div id="ai-summary-content" style="font-size:13px;line-height:1.8"></div>
-
-        <!-- 저장 + 프린트 버튼 -->
-        <div style="display:flex;gap:8px;margin-top:12px">
-          <button class="btn btn-cyan" onclick="saveAiSummary()" style="flex:1;padding:10px;font-size:12px;margin-top:0">💾 요약 저장</button>
-          <button class="btn btn-purple" onclick="printAiSummary()" style="flex:1;padding:10px;font-size:12px;margin-top:0;background:var(--purple)">🖨️ 인쇄/PDF</button>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- ── 요약 보관함 ── -->
-  <div id="nspanel-saved" class="stpanel">
-    <div style="margin-bottom:10px">
-      <input class="tin" id="saved-search" placeholder="🔍 과목명, 제목 검색..." oninput="renderSavedSummaries()" style="--acc:var(--cyan)">
-    </div>
-    <div id="saved-summaries-container"></div>
-  </div>
-
-</div>
-
 </div><!-- /content -->
 
-<!-- 이미지 전체화면 모달 -->
-<div class="img-modal" id="img-modal">
-  <button class="img-modal-close" onclick="closeImgModal()">✕</button>
-  <div class="img-modal-nav">
-    <button class="img-nav-btn" onclick="imgModalNav(-1)">‹</button>
-    <button class="img-nav-btn" onclick="imgModalNav(1)">›</button>
-  </div>
-  <img class="img-modal-img" id="img-modal-img" src="" alt="">
-  <div class="img-modal-counter" id="img-modal-counter"></div>
-  <div class="img-modal-controls">
-    <button class="img-ctrl-btn active" onclick="setModalFilter('original',this)">원본</button>
-    <button class="img-ctrl-btn" onclick="setModalFilter('scan',this)">📄 스캔</button>
-    <button class="img-ctrl-btn" onclick="setModalFilter('scan-strong',this)">📄 스캔 강</button>
-    <button class="img-ctrl-btn" onclick="downloadImg()">⬇ 저장</button>
-  </div>
-</div>
 
 <script>
 // ══════════════════════════════════════════
@@ -1100,7 +959,7 @@ let lastAnalysis  = null;
 const NEIS_ATPT  = 'D10';           // 대구광역시교육청
 const NEIS_CODE  = 'D100000321';    // 성광고등학교
 // CORS 프록시 (브라우저에서 직접 NEIS 호출 시 필요)
-const PROXY      = 'https://corsproxy.io/?url=';
+const PROXY = 'https://api.allorigins.win/raw?url=';
 
 const DAYS = ['일','월','화','수','목','금','토'];
 const ALLERGY = {
