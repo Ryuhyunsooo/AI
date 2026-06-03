@@ -958,6 +958,7 @@ let lastAnalysis  = null;
 // NEIS 성광고 고정값
 const NEIS_ATPT  = 'D10';           // 대구광역시교육청
 const NEIS_CODE  = 'D100000321';    // 성광고등학교
+const NEIS_KEY   = '061498aaef634f28973ba063251e39f1';              // 여기에 발급받은 NEIS API 키 입력
 // CORS 프록시 (브라우저에서 직접 NEIS 호출 시 필요)
 const PROXY = 'https://corsproxy.io/?url=';
 
@@ -1104,27 +1105,24 @@ async function fetchNeisWeek() {
   setNeisStatus('loading', 'NEIS 급식 불러오는 중...');
 
   const { from, to, today } = getWeekRange();
-  const neisUrl = `https://open.neis.go.kr/hub/mealServiceDietInfo?Type=json&pIndex=1&pSize=50&ATPT_OFCDC_SC_CODE=${NEIS_ATPT}&SD_SCHUL_CODE=${NEIS_CODE}&MLSV_FROM_YMD=${from}&MLSV_TO_YMD=${to}`;
+  const neisUrl = `https://open.neis.go.kr/hub/mealServiceDietInfo?KEY=${NEIS_KEY}&Type=json&pIndex=1&pSize=50&ATPT_OFCDC_SC_CODE=${NEIS_ATPT}&SD_SCHUL_CODE=${NEIS_CODE}&MLSV_FROM_YMD=${from}&MLSV_TO_YMD=${to}`;
 
-  // 프록시 여러 개 순서대로 시도
-  const proxies = [
-    'https://corsproxy.io/?url=',
-    'https://api.allorigins.win/raw?url=',
-    'https://proxy.cors.sh/',
-    'https://cors-anywhere.herokuapp.com/',
-  ];
+  // API 키 있으면 직접 호출, 없으면 프록시 사용
+  const proxies = NEIS_KEY
+    ? [neisUrl]
+    : [
+        'https://corsproxy.io/?url=' + encodeURIComponent(neisUrl),
+        'https://api.allorigins.win/raw?url=' + encodeURIComponent(neisUrl),
+      ];
 
   let data = null;
-  for (const proxy of proxies) {
+  for (const url of proxies) {
     try {
-      const url = proxy + encodeURIComponent(neisUrl);
       const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
       const text = await res.text();
       data = JSON.parse(text);
       if (!data.RESULT || data.RESULT.CODE !== 'ERROR') break;
-    } catch(e) {
-      continue;
-    }
+    } catch(e) { continue; }
   }
 
   try {
