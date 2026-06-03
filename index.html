@@ -1107,13 +1107,12 @@ async function fetchNeisWeek() {
   const { from, to, today } = getWeekRange();
   const neisUrl = `https://open.neis.go.kr/hub/mealServiceDietInfo?KEY=${NEIS_KEY}&Type=json&pIndex=1&pSize=50&ATPT_OFCDC_SC_CODE=${NEIS_ATPT}&SD_SCHUL_CODE=${NEIS_CODE}&MLSV_FROM_YMD=${from}&MLSV_TO_YMD=${to}`;
 
-  // API 키 있으면 직접 호출, 없으면 프록시 사용
-  const proxies = NEIS_KEY
-    ? [neisUrl]
-    : [
-        'https://corsproxy.io/?url=' + encodeURIComponent(neisUrl),
-        'https://api.allorigins.win/raw?url=' + encodeURIComponent(neisUrl),
-      ];
+  // API 키 포함해서 프록시로 호출
+  const proxies = [
+    'https://corsproxy.io/?url=' + encodeURIComponent(neisUrl),
+    'https://api.allorigins.win/raw?url=' + encodeURIComponent(neisUrl),
+    'https://cors.sh/?url=' + encodeURIComponent(neisUrl),
+  ];
 
   let data = null;
   for (const url of proxies) {
@@ -1121,7 +1120,7 @@ async function fetchNeisWeek() {
       const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
       const text = await res.text();
       data = JSON.parse(text);
-      if (!data.RESULT || data.RESULT.CODE !== 'ERROR') break;
+      if (data && !data.RESULT?.CODE?.includes('ERROR')) break;
     } catch(e) { continue; }
   }
 
