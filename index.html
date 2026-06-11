@@ -1018,11 +1018,13 @@ function init() {
   document.getElementById('today-date').textContent  = `${now.getMonth()+1}/${now.getDate()}`;
   document.getElementById('day-of-week').textContent = DAYS[now.getDay()]+'요일';
 
-  if (examDate) { document.getElementById('exam-date').value = examDate; }
+  const examDateInput = document.getElementById('exam-date');
+  if (examDate && examDateInput) { examDateInput.value = examDate; }
   updateDday();
 
-  if (apiKey) {
-    document.getElementById('api-key-input').value = apiKey;
+  const apiKeyInput = document.getElementById('api-key-input');
+  if (apiKey && apiKeyInput) {
+    apiKeyInput.value = apiKey;
     document.getElementById('api-status').textContent  = '✓ 저장된 키 있음';
     document.getElementById('api-status').className    = 'api-st api-ok';
   }
