@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>학교 서바이벌 치트키 v3.0</title>
+<link rel="manifest" href="manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080c10;--bg2:#0d1117;--bg3:#161b22;--bg4:#1c2128;
+  --border:#21262d;--border2:#30363d;
+  --text:#e6edf3;--text2:#8b949e;--text3:#484f58;
+  --green:#3fb950;--pink:#f778ba;--yellow:#e3b341;--cyan:#39d0d8;
+  --purple:#bc8cff;--orange:#ffa657;--red:#f85149;--blue:#58a6ff;
+  --mono:'IBM Plex Mono',monospace;--main:'Noto Sans KR',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--text);font-family:var(--main);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(57,208,216,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(57,208,216,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:18px 16px 90px}
+
+/* 헤더 */
+.header{margin-bottom:16px}
+.hdr-eye{font-family:var(--mono);font-size:10px;color:var(--cyan);letter-spacing:3px;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.hdr-eye::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hdr-title{font-size:22px;font-weight:900;letter-spacing:-0.5px}
+.hdr-sub{font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:2px}
+
+/* 인포칩 */
+.info-row{display:flex;gap:8px;margin-bottom:14px}
+.ichip{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 12px;text-align:center}
+.ichip-l{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:1px;margin-bottom:3px}
+.ichip-v{font-family:var(--mono);font-size:18px;font-weight:700}
+
+/* 탭 */
+.tabs{display:flex;gap:4px;margin-bottom:16px;background:var(--bg3);border-radius:12px;padding:4px;overflow-x:auto}
+.tbtn{flex:1;padding:10px 4px;text-align:center;border-radius:8px;border:none;background:none;font-family:var(--main);font-size:12px;font-weight:700;color:var(--text3);cursor:pointer;transition:all .2s;white-space:nowrap}
+.tbtn.active{background:var(--bg4);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.3)}
+
+.panel{display:none;animation:fadein .3s}
+.panel.active{display:block}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.sec-title{font-size:18px;font-weight:900;margin-bottom:2px}
+.sec-sub{font-family:var(--mono);font-size:10px;color:var(--text3);margin-bottom:14px}
+
+/* 카드 */
+.card{background:var(--bg3);border:1px solid var(--border);border-left:3px solid var(--acc,var(--cyan));border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.clabel{font-family:var(--mono);font-size:10px;color:var(--cyan);letter-spacing:2px;margin-bottom:10px;font-weight:700}
+
+/* 버튼 */
+.btn{width:100%;padding:13px;border:none;border-radius:10px;font-family:var(--main);font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;margin-top:4px}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-pink{background:var(--pink);color:#000}
+.btn-cyan{background:var(--cyan);color:#000}
+.btn-outline{background:none;border:1px solid var(--border2);color:var(--text)}
+
+/* 인풋 */
+.inp,.s-inp,.tin,select{width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:8px;color:var(--text);padding:10px 12px;font-family:var(--main);font-size:13px;outline:none;transition:border .2s;margin-bottom:8px}
+.inp:focus,.s-inp:focus,.tin:focus,select:focus{border-color:var(--acc,var(--cyan))}
+.tin{resize:vertical;font-family:var(--main);line-height:1.6}
+
+/* 로딩 */
+.ldots{display:flex;gap:5px;justify-content:center;padding:20px}
+.ldots .dot{width:8px;height:8px;border-radius:50%;background:var(--cyan);animation:dotpulse 1.2s infinite}
+.ldots .dot:nth-child(2){animation-delay:.2s}
+.ldots .dot:nth-child(3){animation-delay:.4s}
+@keyframes dotpulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
+
+.ph{text-align:center;padding:24px 12px;color:var(--text3);font-size:13px;line-height:1.8}
+.ph span{color:var(--cyan);font-family:var(--mono);font-size:11px}
+
+/* 토스트 */
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--green);color:#000;font-family:var(--mono);font-size:11px;font-weight:700;padding:8px 18px;border-radius:20px;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;max-width:90%;text-overflow:ellipsis;overflow:hidden}
+
+/* ── 급식 ── */
+.meal-week-tabs{display:flex;gap:4px;margin-bottom:12px;overflow-x:auto}
+.wtab{flex:none;min-width:48px;padding:8px 4px;text-align:center;border-radius:8px;border:1px solid var(--border);background:var(--bg3);font-family:var(--mono);font-size:11px;color:var(--text3);cursor:pointer;transition:all .2s}
+.wtab.active{background:var(--cyan);color:#000;border-color:var(--cyan);font-weight:700}
+.wtab.today{box-shadow:0 0 0 1px var(--pink) inset}
+.meal-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px}
+.meal-date{font-family:var(--mono);font-size:11px;color:var(--cyan);margin-bottom:8px;letter-spacing:1px}
+.meal-list{font-size:14px;line-height:2;color:var(--text)}
+.meal-cal{font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:8px}
+.neis-status{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;color:var(--text3);margin-bottom:10px}
+.neis-dot{width:6px;height:6px;border-radius:50%;background:var(--text3)}
+.neis-dot.ok{background:var(--green);box-shadow:0 0 6px var(--green)}
+.neis-dot.loading{background:var(--yellow);animation:blink 1s infinite}
+.neis-dot.error{background:var(--red)}
+
+/* ── 자아번역기 ── */
+.notes-upload-zone{border:2px dashed var(--border2);border-radius:12px;padding:24px 16px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.notes-upload-zone:hover,.notes-upload-zone.dragover{border-color:var(--cyan);background:rgba(57,208,216,.04)}
+.notes-upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0}
+.notes-upload-icon{font-size:32px;margin-bottom:6px}
+.notes-upload-txt{font-size:13px;color:var(--text2);font-weight:700}
+.notes-upload-sub{font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:4px}
+
+.out-tabs{display:flex;gap:4px;margin-bottom:10px}
+.otab{flex:1;padding:9px;text-align:center;border-radius:8px;border:1px solid var(--border2);background:var(--bg3);font-family:var(--main);font-size:12px;font-weight:700;color:var(--text3);cursor:pointer;transition:all .2s}
+.otab.active.memo{background:rgba(227,179,65,.12);border-color:var(--yellow);color:var(--yellow)}
+.otab.active.formal{background:rgba(57,208,216,.12);border-color:var(--cyan);color:var(--cyan)}
+.opanel{display:none}
+.opanel.active{display:block}
+.memo-out{background:var(--bg);border-radius:10px;padding:14px;border:1px solid var(--border)}
+.formal-out{background:#fff;color:#1a1a1a;border-radius:10px;padding:16px;font-size:13px;line-height:1.8}
+.formal-out h3{font-size:15px;margin:12px 0 6px;color:#000}
+.formal-out h3:first-child{margin-top:0}
+.formal-out p{margin-bottom:8px}
+.formal-out ul,.formal-out ol{margin:6px 0 8px 20px}
+.formal-out table{width:100%;border-collapse:collapse;margin:8px 0;font-size:12px}
+.formal-out th,.formal-out td{border:1px solid #ccc;padding:6px 8px;text-align:left}
+.formal-out th{background:#f0f0f0}
+.copy-btn{font-family:var(--mono);font-size:11px;padding:8px;border-radius:8px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);cursor:pointer;transition:all .2s}
+.copy-btn.copied{color:var(--green);border-color:var(--green)}
+.rbox{display:none}
+.rbox.show{display:block}
+
+.img-prev-row{display:flex;gap:8px;overflow-x:auto;margin-top:10px}
+.img-prev-item{position:relative;flex:none}
+.img-prev-item img{width:74px;height:74px;object-fit:cover;border-radius:8px;border:1px solid var(--border)}
+.img-prev-del{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:var(--pink);color:#000;border:none;font-size:11px;cursor:pointer;line-height:1;font-weight:700}
+
+/* ── 플래너 ── */
+.planner-row{display:flex;gap:8px;margin-bottom:8px}
+.exam-item{display:flex;justify-content:space-between;align-items:center;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:8px}
+.exam-info{display:flex;flex-direction:column;gap:2px}
+.exam-subj{font-weight:700;font-size:13px}
+.exam-date{font-size:11px;color:var(--text3);font-family:var(--mono)}
+.exam-dday{font-family:var(--mono);font-weight:700;font-size:14px;color:var(--green)}
+.exam-del{background:none;border:none;color:var(--text3);font-size:14px;cursor:pointer;margin-left:8px}
+.todo-item{display:flex;align-items:center;gap:10px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:6px}
+.todo-item.done{opacity:.5}
+.todo-item.done .todo-text{text-decoration:line-through}
+.todo-check{width:20px;height:20px;border-radius:6px;border:2px solid var(--border2);cursor:pointer;flex:none;display:flex;align-items:center;justify-content:center;font-size:12px}
+.todo-check.checked{background:var(--green);border-color:var(--green);color:#000}
+.todo-text{flex:1;font-size:13px}
+.todo-del{background:none;border:none;color:var(--text3);font-size:14px;cursor:pointer}
+
+/* 수행평가 */
+.criteria-item{background:var(--bg);border-radius:8px;padding:10px 12px;margin-bottom:6px;border:1px solid var(--border)}
+.criteria-item .citem{font-weight:700;font-size:13px;display:flex;justify-content:space-between}
+.criteria-item .cpoints{font-family:var(--mono);color:var(--cyan);font-size:12px}
+.criteria-item .cdesc{font-size:12px;color:var(--text2);margin-top:4px;line-height:1.6}
+.tag-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.tag-chip{font-size:11px;padding:4px 10px;border-radius:14px;background:rgba(57,208,216,.1);color:var(--cyan);font-family:var(--mono)}
+.tag-chip.warn{background:rgba(248,81,73,.1);color:var(--red)}
+.route-step{display:flex;gap:10px;background:var(--bg);border-radius:8px;padding:10px 12px;margin-bottom:6px;border:1px solid var(--border)}
+.route-num{font-family:var(--mono);font-weight:900;font-size:16px;color:var(--cyan);flex:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 헤더 -->
+  <div class="header">
+    <div class="hdr-eye">// TENPEAK · SCHOOL SURVIVAL</div>
+    <div class="hdr-title">학교 서바이벌 치트키 v3.0</div>
+    <div class="hdr-sub" id="hdr-date">-- · --요일</div>
+  </div>
+
+  <!-- 인포칩 -->
+  <div class="info-row">
+    <div class="ichip">
+      <div class="ichip-l">D-DAY</div>
+      <div class="ichip-v" id="d-day" style="color:var(--green)">--</div>
+    </div>
+    <div class="ichip">
+      <div class="ichip-l" id="d-day-label">시험</div>
+      <div class="ichip-v" id="d-day-subj" style="font-size:12px;color:var(--text2)">미등록</div>
+    </div>
+    <div class="ichip">
+      <div class="ichip-l">오늘 할일</div>
+      <div class="ichip-v" id="todo-count" style="color:var(--cyan)">0/0</div>
+    </div>
+  </div>
+
+  <!-- 탭 -->
+  <div class="tabs">
+    <button class="tbtn active" onclick="switchTab('meal',this)">🍱 급식</button>
+    <button class="tbtn" onclick="switchTab('assign',this)">📝 수행평가</button>
+    <button class="tbtn" onclick="switchTab('trans',this)">🖨️ 자아번역기</button>
+    <button class="tbtn" onclick="switchTab('planner',this)">📅 플래너</button>
+  </div>
+
+  <!-- ══════════ TAB 1: 급식 ══════════ -->
+  <div id="tab-meal" class="panel active">
+    <div class="sec-title">🍱 이번 주 급식</div>
+    <div class="sec-sub"># 성광고등학교 · NEIS 연동</div>
+
+    <div class="neis-status">
+      <div class="neis-dot" id="neis-dot"></div>
+      <span id="neis-status-txt">불러오는 중...</span>
+      <span id="neis-time" style="margin-left:auto"></span>
+      <button onclick="fetchNeisWeek()" id="refresh-btn" style="font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:8px;background:var(--bg3);border:1px solid var(--border2);color:var(--cyan);cursor:pointer">↻ 새로고침</button>
+    </div>
+
+    <div class="meal-week-tabs" id="meal-week-tabs"></div>
+    <div id="meal-content"></div>
+  </div>
+
+  <!-- ══════════ TAB 2: 수행평가 ══════════ -->
+  <div id="tab-assign" class="panel">
+    <div class="sec-title">📝 수행평가 분석기</div>
+    <div class="sec-sub"># 안내문 사진/텍스트 → AI 채점기준 분석</div>
+
+    <div class="card" style="--acc:var(--orange)">
+      <div class="clabel" style="color:var(--orange)">안내문 입력</div>
+      <div class="notes-upload-zone" id="assign-upload-zone">
+        <input type="file" id="assign-file-inp" accept="image/*" onchange="handleAssignUpload(this)">
+        <div class="notes-upload-icon" id="assign-upload-icon">📋</div>
+        <div class="notes-upload-txt" id="assign-upload-txt">안내문 사진을 올려봐</div>
+        <div class="notes-upload-sub">또는 아래에 텍스트 직접 입력</div>
+      </div>
+      <div id="assign-img-preview"></div>
+      <textarea class="tin" id="assign-text-inp" style="--acc:var(--orange);min-height:90px;margin-top:10px" placeholder="수행평가 안내문 텍스트를 붙여넣어도 OK"></textarea>
+      <button class="btn btn-pink" id="assign-run-btn" onclick="runAssignAnalysis()">🤖 AI 분석 시작</button>
+    </div>
+
+    <div id="assign-result" class="rbox"></div>
+  </div>
+
+  <!-- ══════════ TAB 3: 자아번역기 ══════════ -->
+  <div id="tab-trans" class="panel">
+    <div class="sec-title">🖨️ 자아번역기</div>
+    <div class="sec-sub"># 필기 사진 + 메모 → AI가 암기용/제출용으로 정리</div>
+
+    <div class="card" style="--acc:var(--cyan)">
+      <div class="clabel">STEP 1 · 필기 사진</div>
+      <div class="notes-upload-zone" id="trans-upload-zone">
+        <input type="file" id="trans-file-inp" accept="image/*" multiple onchange="handleTransUpload(this)">
+        <div class="notes-upload-icon" id="trans-upload-icon">📸</div>
+        <div class="notes-upload-txt" id="trans-upload-txt">필기 사진을 올려봐</div>
+        <div class="notes-upload-sub">여러 장 가능 · 화살표/표/도식 다 OK</div>
+      </div>
+      <div class="img-prev-row" id="trans-img-preview"></div>
+    </div>
+
+    <div class="card" style="--acc:var(--yellow)">
+      <div class="clabel" style="color:var(--yellow)">STEP 2 · 추가 메모 (선택)</div>
+      <textarea class="tin" id="raw-input" style="--acc:var(--yellow);min-height:90px" placeholder="사진만으로 충분하면 비워도 돼.&#10;사진에 없는 내용, 강조할 부분을 적어봐."></textarea>
+      <div style="display:flex;gap:8px">
+        <div style="flex:1">
+          <label style="font-size:10px;color:var(--text3);font-family:var(--mono);display:block;margin-bottom:4px">과목</label>
+          <input class="s-inp" id="subject-input" placeholder="예) 생물, 국어">
+        </div>
+        <div style="flex:1">
+          <label style="font-size:10px;color:var(--text3);font-family:var(--mono);display:block;margin-bottom:4px">목적</label>
+          <select id="purpose-select">
+            <option>암기용 요약</option><option>시험 대비</option><option>제출용 정리</option><option>개념 정리</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-pink" id="trans-btn" onclick="translate()">🤖 AI로 정리하기</button>
+    </div>
+
+    <div class="rbox" id="trans-result">
+      <div class="out-tabs">
+        <button class="otab active memo" onclick="switchOutput('memo',this)">💥 암기용</button>
+        <button class="otab formal" onclick="switchOutput('formal',this)">📄 제출용</button>
+      </div>
+      <div id="out-memo" class="opanel active">
+        <div class="memo-out" id="memo-content"><div class="ph">아직 변환 전이야!<br><span>AI로 정리하기</span> 눌러봐 🔥</div></div>
+      </div>
+      <div id="out-formal" class="opanel">
+        <div class="formal-out" id="formal-content"><div class="ph">제출용 문서가 여기에 나와.</div></div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="copy-btn" style="flex:1" onclick="copyFormal()">📋 복사</button>
+          <button class="copy-btn" style="flex:1;color:var(--pink);border-color:var(--pink)" onclick="printNote()">🖨️ 프린트</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ TAB 4: 플래너 ══════════ -->
+  <div id="tab-planner" class="panel">
+    <div class="sec-title">📅 플래너</div>
+    <div class="sec-sub"># 시험 D-Day · 오늘 할 일</div>
+
+    <div class="card" style="--acc:var(--green)">
+      <div class="clabel" style="color:var(--green)">시험 일정</div>
+      <div id="exam-list"></div>
+      <div class="planner-row">
+        <input class="s-inp" id="exam-subj-inp" placeholder="과목명" style="margin-bottom:0;flex:1">
+        <input class="inp" type="date" id="exam-date-inp" style="margin-bottom:0;flex:1;font-family:var(--mono);font-size:12px">
+      </div>
+      <button class="btn btn-cyan" onclick="addExam()">+ 시험 추가</button>
+    </div>
+
+    <div class="card" style="--acc:var(--pink)">
+      <div class="clabel" style="color:var(--pink)">오늘 할 일</div>
+      <div id="todo-list"></div>
+      <div class="planner-row">
+        <input class="s-inp" id="todo-inp" placeholder="할 일 입력" style="margin-bottom:0;flex:1" onkeydown="if(event.key==='Enter')addTodo()">
+      </div>
+      <button class="btn btn-cyan" onclick="addTodo()">+ 추가</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════════
+//  공통
+// ══════════════════════════════════════════
+const DAYS = ['일','월','화','수','목','금','토'];
+const apiKey = 'cjddk0509';
+const AI_URL = 'http://10.1.1.60:8000/v1/chat/completions';
+const AI_MODEL = 'gemma-4-26B-A4B-it-RotorQuant-MLX-8bit';
+
+const NEIS_ATPT = 'D10';
+const NEIS_CODE = 'D100000321';
+const NEIS_KEY  = '061498aaef634f28973ba063251e39f1';
+const PROXY = 'https://corsproxy.io/?url=';
+
+function showToast(msg) {
+  let t = document.getElementById('toast');
+  if (!t) {
+    t = document.createElement('div'); t.id = 'toast';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg; t.style.opacity = '1';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=> t.style.opacity='0', 2200);
+}
+
+function switchTab(id, btn) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+  localStorage.setItem('ss_lasttab', id);
+}
+
+function loadScript(src) {
+  return new Promise((resolve,reject)=>{
+    const s = document.createElement('script');
+    s.src = src; s.onload = resolve; s.onerror = reject;
+    document.body.appendChild(s);
+  });
+}
+
+// ══════════════════════════════════════════
+//  초기화
+// ══════════════════════════════════════════
+function init() {
+  const now = new Date();
+  document.getElementById('hdr-date').textContent = `${now.getMonth()+1}/${now.getDate()} · ${DAYS[now.getDay()]}요일`;
+
+  initMeal();
+  initPlanner();
+  setupTransDragDrop();
+  setupAssignDragDrop();
+
+  const lastTab = localStorage.getItem('ss_lasttab');
+  if (lastTab && document.getElementById('tab-'+lastTab)) {
+    const idx = {meal:0,assign:1,trans:2,planner:3}[lastTab];
+    const btn = document.querySelectorAll('.tbtn')[idx];
+    if (btn) switchTab(lastTab, btn);
+  }
+}
+window.addEventListener('DOMContentLoaded', init);
+
+// ══════════════════════════════════════════
+//  급식 (NEIS)
+// ══════════════════════════════════════════
+let weekMealCache = {};
+let weekDates = [];
+let selectedMealDate = null;
+
+function getWeekRange(offset=0) {
+  const now = new Date();
+  now.setDate(now.getDate() + offset*7);
+  const day = now.getDay();
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - (day===0?6:day-1));
+  const dates = [];
+  for (let i=0;i<5;i++){
+    const d = new Date(monday); d.setDate(monday.getDate()+i);
+    dates.push(d);
+  }
+  const fmt = d => `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+  return { from: fmt(dates[0]), to: fmt(dates[4]), dates };
+}
+
+function setNeisStatus(state, txt) {
+  const dot = document.getElementById('neis-dot');
+  dot.className = 'neis-dot ' + state;
+  document.getElementById('neis-status-txt').textContent = txt;
+}
+
+function initMeal() {
+  const cached = localStorage.getItem('ss_meal_cache');
+  if (cached) {
+    try { weekMealCache = JSON.parse(cached); } catch(e){}
+    const t = localStorage.getItem('ss_meal_time');
+    if (t) document.getElementById('neis-time').textContent = `업데이트: ${t}`;
+  }
+  buildWeekTabs();
+  fetchNeisWeek();
+}
+
+function buildWeekTabs() {
+  const { dates } = getWeekRange(0);
+  weekDates = dates;
+  const todayStr = new Date().toDateString();
+  const fmtKey = d => `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+
+  const el = document.getElementById('meal-week-tabs');
+  el.innerHTML = dates.map((d,i) => {
+    const isToday = d.toDateString() === todayStr;
+    if (!selectedMealDate && isToday) selectedMealDate = fmtKey(d);
+    return `<button class="wtab${isToday?' today':''}${fmtKey(d)===selectedMealDate?' active':''}" onclick="selectMealDate('${fmtKey(d)}',this)">${DAYS[d.getDay()]}<br>${d.getMonth()+1}/${d.getDate()}</button>`;
+  }).join('');
+
+  if (!selectedMealDate) selectedMealDate = fmtKey(dates[0]);
+  renderMealContent();
+}
+
+function selectMealDate(key, btn) {
+  selectedMealDate = key;
+  document.querySelectorAll('.wtab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMealContent();
+}
+
+function renderMealContent() {
+  const el = document.getElementById('meal-content');
+  const meal = weekMealCache[selectedMealDate];
+  const d = weekDates.find(d => `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}` === selectedMealDate);
+  const dateLabel = d ? `${d.getMonth()+1}월 ${d.getDate()}일 (${DAYS[d.getDay()]})` : selectedMealDate;
+
+  if (!meal || (!meal.lunch && !meal.dinner)) {
+    el.innerHTML = `<div class="meal-card"><div class="meal-date">${dateLabel}</div><div class="ph">이 날은 급식 정보가 없어요 🏖️</div></div>`;
+    return;
+  }
+
+  let html = `<div class="meal-card"><div class="meal-date">${dateLabel}</div>`;
+  if (meal.lunch) {
+    html += `<div style="font-family:var(--mono);font-size:10px;color:var(--cyan);margin-bottom:4px">🍚 중식</div>`;
+    html += `<div class="meal-list">${meal.lunch.map(m=>`• ${m}`).join('<br>')}</div>`;
+    if (meal.cal) html += `<div class="meal-cal">${meal.cal}${meal.ntr ? ' · ' + meal.ntr.split('<br/>').slice(0,2).join(', ') : ''}</div>`;
+  }
+  if (meal.dinner) {
+    html += `<div style="font-family:var(--mono);font-size:10px;color:var(--orange);margin:10px 0 4px">🌙 석식</div>`;
+    html += `<div class="meal-list">${meal.dinner.map(m=>`• ${m}`).join('<br>')}</div>`;
+  }
+  html += `</div>`;
+  el.innerHTML = html;
+}
+
+function parseMenu(str) {
+  return str.split('<br/>').map(s => s.replace(/\([\d.]+\)/g,'').trim()).filter(Boolean);
+}
+
+async function fetchNeisWeek() {
+  const btn = document.getElementById('refresh-btn');
+  btn.disabled = true;
+  setNeisStatus('loading', 'NEIS 급식 불러오는 중...');
+
+  const { from, to } = getWeekRange();
+  const neisUrl = `https://open.neis.go.kr/hub/mealServiceDietInfo?KEY=${NEIS_KEY}&Type=json&pIndex=1&pSize=50&ATPT_OFCDC_SC_CODE=${NEIS_ATPT}&SD_SCHUL_CODE=${NEIS_CODE}&MLSV_FROM_YMD=${from}&MLSV_TO_YMD=${to}`;
+
+  const candidates = [
+    neisUrl,
+    PROXY + encodeURIComponent(neisUrl),
+    'https://api.allorigins.win/raw?url=' + encodeURIComponent(neisUrl),
+  ];
+
+  let data = null;
+  for (const url of candidates) {
+    try {
+      const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
+      const text = await res.text();
+      data = JSON.parse(text);
+      if (!data.RESULT || data.RESULT.CODE !== 'ERROR') break;
+    } catch(e) { continue; }
+  }
+
+  try {
+    if (!data) throw new Error('네트워크 오류');
+
+    if (data.RESULT) {
+      const code = data.RESULT.CODE;
+      if (code === 'INFO-200') {
+        setNeisStatus('error', '이번 주 급식 데이터 없음');
+        weekMealCache = {};
+        renderMealContent();
+        btn.disabled = false; return;
+      }
+      throw new Error(data.RESULT.MESSAGE || '오류');
+    }
+
+    const rows = data?.mealServiceDietInfo?.[1]?.row || [];
+    weekMealCache = {};
+    rows.forEach(row => {
+      const date = row.MLSV_YMD;
+      const mtype = row.MMEAL_SC_CODE;
+      const menus = parseMenu(row.DDISH_NM || '');
+      const cal = row.CAL_INFO || '';
+      const ntr = row.NTR_INFO || '';
+      if (!weekMealCache[date]) weekMealCache[date] = {};
+      if (mtype === '2') { weekMealCache[date].lunch = menus; weekMealCache[date].cal = cal; weekMealCache[date].ntr = ntr; }
+      if (mtype === '3') { weekMealCache[date].dinner = menus; weekMealCache[date].dinnerCal = cal; }
+    });
+
+    localStorage.setItem('ss_meal_cache', JSON.stringify(weekMealCache));
+    const now = new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
+    localStorage.setItem('ss_meal_time', now);
+    document.getElementById('neis-time').textContent = `업데이트: ${now}`;
+    setNeisStatus('ok', '연결됨');
+    renderMealContent();
+  } catch(e) {
+    setNeisStatus('error', '오류: ' + e.message.slice(0,30));
+    renderMealContent();
+  }
+  btn.disabled = false;
+}
+
+// ══════════════════════════════════════════
+//  플래너
+// ══════════════════════════════════════════
+let exams = [];
+let todos = [];
+
+function initPlanner() {
+  try { exams = JSON.parse(localStorage.getItem('ss_exams')||'[]'); } catch(e){ exams=[]; }
+  try {
+    const saved = JSON.parse(localStorage.getItem('ss_todos')||'{}');
+    const today = new Date().toDateString();
+    if (saved.date === today) todos = saved.items || [];
+    else todos = [];
+  } catch(e){ todos=[]; }
+  renderExams();
+  renderTodos();
+  updateDday();
+}
+
+function saveExams(){ localStorage.setItem('ss_exams', JSON.stringify(exams)); }
+function saveTodos(){ localStorage.setItem('ss_todos', JSON.stringify({date:new Date().toDateString(), items:todos})); }
+
+function addExam() {
+  const subj = document.getElementById('exam-subj-inp').value.trim();
+  const date = document.getElementById('exam-date-inp').value;
+  if (!subj || !date) { showToast('과목명과 날짜를 입력해줘!'); return; }
+  exams.push({ id:Date.now().toString(), subj, date });
+  exams.sort((a,b)=> new Date(a.date)-new Date(b.date));
+  saveExams();
+  document.getElementById('exam-subj-inp').value='';
+  document.getElementById('exam-date-inp').value='';
+  renderExams();
+  updateDday();
+}
+
+function deleteExam(id) {
+  exams = exams.filter(e=>e.id!==id);
+  saveExams(); renderExams(); updateDday();
+}
+
+function renderExams() {
+  const el = document.getElementById('exam-list');
+  if (!exams.length) { el.innerHTML = '<div class="ph">등록된 시험이 없어</div>'; return; }
+  const now = new Date();
+  el.innerHTML = exams.map(e => {
+    const diff = Math.ceil((new Date(e.date)-now)/86400000);
+    const ddayTxt = diff===0?'D-DAY':diff>0?`D-${diff}`:`D+${-diff}`;
+    const ddayColor = diff===0?'var(--pink)':diff>0?'var(--green)':'var(--text3)';
+    const dateDisp = `${new Date(e.date).getMonth()+1}/${new Date(e.date).getDate()}`;
+    return `<div class="exam-item">
+      <div class="exam-info">
+        <div class="exam-subj">${e.subj}</div>
+        <div class="exam-date">${dateDisp} (${DAYS[new Date(e.date).getDay()]})</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="exam-dday" style="color:${ddayColor}">${ddayTxt}</div>
+        <button class="exam-del" onclick="deleteExam('${e.id}')">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateDday() {
+  const el = document.getElementById('d-day');
+  const lbl = document.getElementById('d-day-label');
+  const subjEl = document.getElementById('d-day-subj');
+  const now = new Date();
+  const upcoming = exams.filter(e=>Math.ceil((new Date(e.date)-now)/86400000)>=0)
+    .sort((a,b)=>new Date(a.date)-new Date(b.date))[0];
+  if (upcoming) {
+    const diff = Math.ceil((new Date(upcoming.date)-now)/86400000);
+    if (diff===0) { el.textContent='D-DAY'; el.style.color='var(--pink)'; }
+    else { el.textContent=`D-${diff}`; el.style.color='var(--green)'; }
+    lbl.textContent = '시험';
+    subjEl.textContent = upcoming.subj;
+  } else {
+    el.textContent='--'; el.style.color='var(--green)';
+    lbl.textContent='시험'; subjEl.textContent='미등록';
+  }
+}
+
+function addTodo() {
+  const inp = document.getElementById('todo-inp');
+  const text = inp.value.trim();
+  if (!text) return;
+  todos.push({ id:Date.now().toString(), text, done:false });
+  saveTodos(); inp.value=''; renderTodos();
+}
+
+function toggleTodo(id) {
+  const t = todos.find(t=>t.id===id);
+  if (t) t.done = !t.done;
+  saveTodos(); renderTodos();
+}
+
+function deleteTodo(id) {
+  todos = todos.filter(t=>t.id!==id);
+  saveTodos(); renderTodos();
+}
+
+function renderTodos() {
+  const el = document.getElementById('todo-list');
+  if (!todos.length) { el.innerHTML = '<div class="ph">오늘 할 일을 추가해봐</div>'; }
+  else {
+    el.innerHTML = todos.map(t => `
+      <div class="todo-item${t.done?' done':''}">
+        <div class="todo-check${t.done?' checked':''}" onclick="toggleTodo('${t.id}')">${t.done?'✓':''}</div>
+        <div class="todo-text">${t.text}</div>
+        <button class="todo-del" onclick="deleteTodo('${t.id}')">✕</button>
+      </div>`).join('');
+  }
+  const done = todos.filter(t=>t.done).length;
+  document.getElementById('todo-count').textContent = `${done}/${todos.length}`;
+}
+
+// ══════════════════════════════════════════
+//  자아번역기
+// ══════════════════════════════════════════
+let transImgs = [];
+
+function setupTransDragDrop() {
+  const zone = document.getElementById('trans-upload-zone');
+  zone.addEventListener('dragover', e=>{e.preventDefault();zone.classList.add('dragover');});
+  zone.addEventListener('dragleave',()=>zone.classList.remove('dragover'));
+  zone.addEventListener('drop',e=>{
+    e.preventDefault();zone.classList.remove('dragover');
+    const files=[...e.dataTransfer.files].filter(f=>f.type.startsWith('image/'));
+    if(!files.length) return;
+    const dt=new DataTransfer();
+    files.forEach(f=>dt.items.add(f));
+    const inp=document.getElementById('trans-file-inp');
+    inp.files=dt.files;
+    handleTransUpload(inp);
+  });
+}
+
+function handleTransUpload(input) {
+  const files = [...input.files];
+  if (!files.length) return;
+  let loaded = 0;
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      transImgs.push({ name: file.name, dataUrl: e.target.result });
+      loaded++;
+      if (loaded === files.length) {
+        renderTransPreview();
+        document.getElementById('trans-upload-icon').textContent = '✅';
+        document.getElementById('trans-upload-txt').textContent = `${transImgs.length}장 선택됨 — 다시 누르면 추가`;
+        showToast('사진 추가됨!');
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value = '';
+}
+
+function renderTransPreview() {
+  const el = document.getElementById('trans-img-preview');
+  el.innerHTML = transImgs.map((img,i) => `
+    <div class="img-prev-item">
+      <img src="${img.dataUrl}">
+      <button class="img-prev-del" onclick="removeTransImg(${i})">✕</button>
+    </div>`).join('');
+}
+
+function removeTransImg(idx) {
+  transImgs.splice(idx,1);
+  renderTransPreview();
+  if (!transImgs.length) {
+    document.getElementById('trans-upload-icon').textContent = '📸';
+    document.getElementById('trans-upload-txt').textContent = '필기 사진을 올려봐';
+  }
+}
+
+let lastTransContent = '';
+
+async function translate() {
+  const raw = document.getElementById('raw-input').value.trim();
+  const subject = document.getElementById('subject-input').value.trim();
+  const purpose = document.getElementById('purpose-select').value;
+
+  if (!raw && !transImgs.length) { showToast('사진을 올리거나 내용을 입력해줘!'); return; }
+
+  const btn = document.getElementById('trans-btn');
+  btn.disabled = true; btn.textContent = '정리 중...';
+  document.getElementById('trans-result').classList.add('show');
+  document.getElementById('memo-content').innerHTML = `<div class="ldots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
+  document.getElementById('formal-content').innerHTML = `<div class="ph">생성 중...</div>`;
+
+  const sys = `너는 고등학생의 필기/노트를 두 가지 버전으로 정리하는 AI야. 사진이 첨부되면 손글씨, 화살표, 도식, 트리 구조, 표까지 다 읽고 그 구조와 관계를 살려서 정리해줘. 반드시 아래 JSON만 출력해:
+{"memo":"암기용 — 학생 말투와 유머 살리고 핵심만 날카롭게. 이모지 드립 줄임말 OK.","formal_html":"제출용 HTML — h3 소제목, p 본문, ul/li 목록, table 비교표. 교과서 문어체. script style 태그 금지."}`;
+
+  const userContent = [];
+  const textPart = `과목:${subject||'미지정'}\n목적:${purpose}${raw ? '\n\n[추가 메모]\n'+raw : ''}`;
+  userContent.push({ type:'text', text: textPart });
+  transImgs.forEach(img => userContent.push({ type:'image_url', image_url:{ url: img.dataUrl } }));
+
+  try {
+    const res = await fetch(AI_URL, {
+      method:'POST', headers:{'Content-Type':'application/json','Authorization':`Bearer ${apiKey}`},
+      body: JSON.stringify({ model: AI_MODEL, messages:[{role:'system',content:sys},{role:'user',content:userContent}] })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    const result = JSON.parse(data.choices[0].message.content.replace(/```json|```/g,'').trim());
+    document.getElementById('memo-content').innerHTML = `<div style="white-space:pre-line;font-size:14px;color:var(--yellow);line-height:1.8">${result.memo}</div>`;
+    document.getElementById('formal-content').innerHTML = result.formal_html;
+    lastTransContent = result.memo;
+  } catch(e) {
+    document.getElementById('memo-content').innerHTML = `<div class="ph">⚠ 오류: <span>${e.message}</span></div>`;
+  }
+  btn.disabled = false; btn.textContent = '🤖 AI로 정리하기';
+}
+
+function switchOutput(id, btn) {
+  document.querySelectorAll('.otab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.opanel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('out-'+id).classList.add('active');
+}
+
+function copyFormal() {
+  navigator.clipboard.writeText(document.getElementById('formal-content').innerText).then(()=>{
+    const b = document.querySelector('.copy-btn');
+    b.textContent='✓ 복사됨!'; b.classList.add('copied');
+    setTimeout(()=>{b.textContent='📋 복사'; b.classList.remove('copied');},2000);
+  });
+}
+
+function printNote() {
+  const subject = document.getElementById('subject-input').value.trim() || '학습 노트';
+  const content = document.getElementById('formal-content').innerHTML;
+  if (!content || content.includes('제출용 문서가 여기에')) { showToast('먼저 AI로 정리해봐!'); return; }
+  const now = new Date();
+  const dateStr = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}`;
+  const printWin = window.open('', '_blank');
+  printWin.document.write(`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>${subject}</title>
+<style>body{font-family:'Noto Sans KR',sans-serif;padding:40px;color:#1a1a1a;line-height:1.8}
+h3{margin:16px 0 8px}table{width:100%;border-collapse:collapse;margin:8px 0}
+th,td{border:1px solid #ccc;padding:6px 8px}th{background:#f0f0f0}
+.ttl{display:flex;justify-content:space-between;border-bottom:2px solid #333;padding-bottom:8px;margin-bottom:16px}
+</style></head><body><div class="ttl"><h2>${subject}</h2><span>${dateStr}</span></div>${content}</body></html>`);
+  printWin.document.close();
+  setTimeout(()=>printWin.print(), 400);
+}
+
+// ══════════════════════════════════════════
+//  수행평가 분석기
+// ══════════════════════════════════════════
+let assignImgData = '';
+
+function setupAssignDragDrop() {
+  const zone = document.getElementById('assign-upload-zone');
+  zone.addEventListener('dragover', e=>{e.preventDefault();zone.classList.add('dragover');});
+  zone.addEventListener('dragleave',()=>zone.classList.remove('dragover'));
+  zone.addEventListener('drop',e=>{
+    e.preventDefault();zone.classList.remove('dragover');
+    const file=[...e.dataTransfer.files].find(f=>f.type.startsWith('image/'));
+    if(!file) return;
+    const dt=new DataTransfer(); dt.items.add(file);
+    const inp=document.getElementById('assign-file-inp');
+    inp.files=dt.files;
+    handleAssignUpload(inp);
+  });
+}
+
+function handleAssignUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    assignImgData = e.target.result;
+    document.getElementById('assign-img-preview').innerHTML = `<div class="img-prev-row"><div class="img-prev-item"><img src="${assignImgData}"></div></div>`;
+    document.getElementById('assign-upload-icon').textContent = '✅';
+    document.getElementById('assign-upload-txt').textContent = file.name;
+    showToast('이미지 로드됨!');
+  };
+  reader.readAsDataURL(file);
+}
+
+async function runAssignAnalysis() {
+  const directText = document.getElementById('assign-text-inp').value.trim();
+  if (!assignImgData && !directText) { showToast('이미지를 올리거나 텍스트를 입력해줘!'); return; }
+
+  const btn = document.getElementById('assign-run-btn');
+  btn.disabled = true; btn.textContent = '분석 중...';
+  const resultEl = document.getElementById('assign-result');
+  resultEl.classList.add('show');
+  resultEl.innerHTML = `<div class="card"><div class="ldots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>`;
+
+  const sys = `너는 고등학생의 수행평가 안내문을 분석하는 전문 AI야.
+반드시 아래 JSON만 출력해:
+{"title":"수행평가 제목","deadline":"제출 기한 또는 null","keywords":["감점 방지 필수 키워드 5~8개"],"cautions":["절대 하면 안 되는 것들 3~5개"],"scoring_criteria":[{"item":"채점 항목명","points":"배점","description":"세부 기준"}],"routes":[{"step":"1","action":"가성비 최고 행동","tip":"꿀팁"}],"one_line":"한 줄 요약"}`;
+
+  const messages = assignImgData
+    ? [{ role:'user', content:[{type:'image_url',image_url:{url:assignImgData}},{type:'text',text:(directText?'추가 메모: '+directText+'\\n\\n':'')+'위 이미지는 수행평가 안내문입니다. 분석해줘.'}] }]
+    : [{ role:'user', content:`다음 수행평가 안내문을 분석해줘:\n\n${directText}` }];
+
+  try {
+    const res = await fetch(AI_URL, {
+      method:'POST', headers:{'Content-Type':'application/json','Authorization':`Bearer ${apiKey}`},
+      body: JSON.stringify({ model: AI_MODEL, messages:[{role:'system',content:sys},...messages] })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    const r = JSON.parse(data.choices[0].message.content.replace(/```json|```/g,'').trim());
+
+    let html = `<div class="card" style="--acc:var(--orange)">
+      <div class="clabel" style="color:var(--orange)">${r.title || '수행평가'}</div>
+      <div style="font-size:13px;color:var(--text2);margin-bottom:8px">${r.one_line || ''}</div>
+      ${r.deadline ? `<div style="font-family:var(--mono);font-size:11px;color:var(--pink)">⏰ 마감: ${r.deadline}</div>` : ''}
+    </div>`;
+
+    if (r.keywords?.length) {
+      html += `<div class="card" style="--acc:var(--cyan)"><div class="clabel">필수 키워드</div>
+        <div class="tag-list">${r.keywords.map(k=>`<span class="tag-chip">${k}</span>`).join('')}</div></div>`;
+    }
+    if (r.cautions?.length) {
+      html += `<div class="card" style="--acc:var(--red)"><div class="clabel" style="color:var(--red)">⚠ 주의사항</div>
+        <div class="tag-list">${r.cautions.map(c=>`<span class="tag-chip warn">${c}</span>`).join('')}</div></div>`;
+    }
+    if (r.scoring_criteria?.length) {
+      html += `<div class="card" style="--acc:var(--purple)"><div class="clabel" style="color:var(--purple)">채점 기준</div>
+        ${r.scoring_criteria.map(c=>`<div class="criteria-item"><div class="citem"><span>${c.item}</span><span class="cpoints">${c.points}</span></div><div class="cdesc">${c.description}</div></div>`).join('')}
+      </div>`;
+    }
+    if (r.routes?.length) {
+      html += `<div class="card" style="--acc:var(--green)"><div class="clabel" style="color:var(--green)">추천 루트</div>
+        ${r.routes.map(s=>`<div class="route-step"><div class="route-num">${s.step}</div><div><div style="font-weight:700;font-size:13px">${s.action}</div><div style="font-size:12px;color:var(--text2);margin-top:2px">${s.tip}</div></div></div>`).join('')}
+      </div>`;
+    }
+    resultEl.innerHTML = html;
+  } catch(e) {
+    resultEl.innerHTML = `<div class="card"><div class="ph">⚠ 오류: <span>${e.message}</span></div></div>`;
+  }
+  btn.disabled = false; btn.textContent = '🤖 AI 분석 시작';
+}
+</script>
+</body>
+</html>
