@@ -695,21 +695,10 @@ input.s-inp:focus{border-color:var(--cyan)}
     <div id="trans-img-preview" style="display:none;margin-top:10px"></div>
   </div>
 
-  <!-- OCR 진행 상태 -->
-  <div id="trans-ocr-status" style="display:none;margin-bottom:10px">
-    <div class="card" style="--acc:var(--yellow)">
-      <div class="clabel" style="color:var(--yellow)">OCR 진행 중</div>
-      <div style="background:var(--bg3);border-radius:6px;height:6px;overflow:hidden;margin-bottom:6px">
-        <div id="trans-ocr-bar" style="height:100%;background:var(--yellow);border-radius:6px;transition:width .3s;width:0%"></div>
-      </div>
-      <div id="trans-ocr-txt" style="font-family:var(--mono);font-size:11px;color:var(--text3)">텍스트 인식 중...</div>
-    </div>
-  </div>
-
   <!-- STEP 2: 미리보기 + 직접 수정 -->
   <div class="card" style="--acc:var(--yellow)">
-    <div class="clabel" style="color:var(--yellow)">STEP 2 · 미리보기 — 직접 수정해봐</div>
-    <textarea class="tin" id="raw-input" style="--acc:var(--yellow);min-height:160px" placeholder="사진을 올리면 여기에 인식된 텍스트가 나와. 잘못 읽힌 부분은 직접 고쳐도 돼!&#10;&#10;사진 없이 바로 입력해도 OK."></textarea>
+    <div class="clabel" style="color:var(--yellow)">STEP 2 · 추가 메모 (선택)</div>
+    <textarea class="tin" id="raw-input" style="--acc:var(--yellow);min-height:100px" placeholder="사진만으로 충분하면 비워둬도 돼.&#10;사진에 없는 내용이나 추가 설명, 강조하고 싶은 부분을 적어봐."></textarea>
     <div style="display:flex;gap:8px;margin-top:10px">
       <div style="flex:1">
         <label style="font-size:10px;color:var(--text3);font-family:var(--mono);display:block;margin-bottom:4px">과목</label>
@@ -1617,9 +1606,7 @@ function handleTransUpload(input) {
   const files = [...input.files];
   if (!files.length) return;
 
-  const preview = document.getElementById('trans-img-preview');
   let loaded = 0;
-
   files.forEach(file => {
     const reader = new FileReader();
     reader.onload = e => {
@@ -1629,7 +1616,7 @@ function handleTransUpload(input) {
         renderTransPreview();
         document.getElementById('trans-upload-icon').textContent = '✅';
         document.getElementById('trans-upload-txt').textContent = `${transImgs.length}장 선택됨 — 다시 누르면 추가`;
-        runTransOCR();
+        showToast('사진 추가됨! 메모 적고 AI로 정리해봐');
       }
     };
     reader.readAsDataURL(file);
@@ -1658,48 +1645,6 @@ function removeTransImg(idx) {
   }
 }
 
-async function runTransOCR() {
-  if (!transImgs.length) return;
-
-  const statusBox = document.getElementById('trans-ocr-status');
-  const bar = document.getElementById('trans-ocr-bar');
-  const txt = document.getElementById('trans-ocr-txt');
-  statusBox.style.display = 'block';
-  bar.style.width = '0%';
-
-  try {
-    if (typeof Tesseract === 'undefined') {
-      txt.textContent = 'OCR 엔진 불러오는 중...';
-      await loadScript('https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.1.1/tesseract.min.js');
-    }
-
-    let combined = '';
-    for (let i = 0; i < transImgs.length; i++) {
-      const img = transImgs[i];
-      txt.textContent = `${i+1}/${transImgs.length}번째 사진 인식 중...`;
-      const result = await Tesseract.recognize(img.dataUrl, 'kor+eng', {
-        logger: m => {
-          if (m.status === 'recognizing text') {
-            const pct = Math.round((i + m.progress) / transImgs.length * 100);
-            bar.style.width = pct + '%';
-            txt.textContent = `${i+1}/${transImgs.length}번째 사진 · ${Math.round(m.progress*100)}%`;
-          }
-        }
-      });
-      combined += (combined ? '\n\n' : '') + result.data.text.trim();
-    }
-
-    const raw = document.getElementById('raw-input');
-    raw.value = raw.value.trim() ? raw.value.trim() + '\n\n' + combined : combined;
-    showToast('✅ 텍스트 추출 완료! 확인하고 수정해봐');
-  } catch(e) {
-    showToast('OCR 오류: ' + e.message.slice(0,30));
-    txt.textContent = 'OCR 실패 — 직접 입력해도 돼';
-  }
-
-  statusBox.style.display = 'none';
-}
-
 function setupTransDragDrop() {
   const zone = document.getElementById('trans-upload-zone');
   if (!zone) return;
@@ -1718,21 +1663,33 @@ function setupTransDragDrop() {
 }
 
 async function translate() {
-  
-  const raw = document.getElementById('raw-input').value.trim();
-  if (!raw) { alert('번역할 내용을 입력해주세요.'); return; }
+
+  const raw     = document.getElementById('raw-input').value.trim();
   const subject = document.getElementById('subject-input').value.trim();
   const purpose = document.getElementById('purpose-select').value;
+
+  if (!raw && !transImgs.length) { alert('사진을 올리거나 내용을 입력해주세요.'); return; }
+
   const btn = document.getElementById('trans-btn');
-  btn.disabled = true; btn.textContent = '번역 중...';
+  btn.disabled = true; btn.textContent = '정리 중...';
   document.getElementById('trans-result').classList.add('show');
   document.getElementById('memo-content').innerHTML=`<div class="ldots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
   document.getElementById('formal-content').innerHTML=`<div class="ph">생성 중...</div>`;
+
   const fewEx = samples.length>0?`\n\n학생 필기 예시:\n${samples.slice(0,3).map((s,i)=>`예${i+1}) "${s.text}"`).join('\n')}`:'';
-  const sys=`너는 고등학생의 날것의 노트를 두 가지 버전으로 정리하는 AI야. 반드시 아래 JSON만 출력해:
+  const sys=`너는 고등학생의 필기/노트를 두 가지 버전으로 정리하는 AI야. 사진이 첨부되면 손글씨, 화살표, 도식, 트리 구조, 표까지 다 읽고 그 구조와 관계를 살려서 정리해줘. 반드시 아래 JSON만 출력해:
 {"memo":"암기용 — 학생 말투와 유머 살리고 핵심만 날카롭게. 이모지 드립 줄임말 OK.","formal_html":"제출용 HTML — h3 소제목, p 본문, ul/li 목록, table 비교표. 교과서 문어체. script style 태그 금지."}${fewEx}`;
+
+  // user content 구성 — 이미지 + 텍스트
+  const userContent = [];
+  const textPart = `과목:${subject||'미지정'}\n목적:${purpose}${raw ? '\n\n[추가 메모/수정사항]\n'+raw : ''}`;
+  userContent.push({ type:'text', text: textPart });
+  transImgs.forEach(img => {
+    userContent.push({ type:'image_url', image_url:{ url: img.dataUrl } });
+  });
+
   try {
-    const res=await fetch('http://10.1.1.60:8000/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${apiKey}`},body:JSON.stringify({model:'gemma-4-26B-A4B-it-RotorQuant-MLX-8bit',messages:[{role:'system',content:sys},{role:'user',content:`과목:${subject||'미지정'}\n목적:${purpose}\n\n${raw}`}]})});
+    const res=await fetch('http://10.1.1.60:8000/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${apiKey}`},body:JSON.stringify({model:'gemma-4-26B-A4B-it-RotorQuant-MLX-8bit',messages:[{role:'system',content:sys},{role:'user',content:userContent}]})});
     const data=await res.json();
     if(data.error) throw new Error(data.error.message);
     const result=JSON.parse(data.choices[0].message.content.replace(/```json|```/g,'').trim());
@@ -1743,7 +1700,7 @@ async function translate() {
   } catch(e) {
     document.getElementById('memo-content').innerHTML=`<div class="ph">⚠ 오류: <span>${e.message}</span></div>`;
   }
-  btn.disabled=false; btn.textContent='🖨️ 번역 시작';
+  btn.disabled=false; btn.textContent='🤖 AI로 정리하기';
 }
 function switchOutput(id,btn) {
   document.querySelectorAll('.otab').forEach(t=>t.classList.remove('active'));
