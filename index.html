@@ -681,24 +681,35 @@ input.s-inp:focus{border-color:var(--cyan)}
 <div id="tab-trans" class="panel">
 
   <div class="sec-title">자아 번역기</div>
-  <div class="sec-sub"># 악필/날것의 생각 → 두 가지 버전 출력</div>
+  <div class="sec-sub"># 필기 사진 → 텍스트 추출 → 직접 수정 → AI 정리</div>
 
+  <!-- STEP 1: 필기 사진 업로드 -->
   <div class="card" style="--acc:var(--cyan)">
-    <div class="clabel">HANDWRITING SAMPLES (FEW-SHOT)</div>
-    <div class="slist" id="sample-list"></div>
-    <div class="sform">
-      <div class="sup-row">
-        <button class="sup-btn">📷 악필 사진<input type="file" accept="image/*" id="sample-img-input" onchange="setSampleImg(this)"></button>
-        <span class="sfname" id="sample-img-name">선택 안 됨</span>
+    <div class="clabel">STEP 1 · 필기 사진 업로드</div>
+    <div class="notes-upload-zone" id="trans-upload-zone" style="margin-bottom:0">
+      <input type="file" id="trans-file-inp" accept="image/*" multiple onchange="handleTransUpload(this)">
+      <div class="notes-upload-icon" id="trans-upload-icon">📸</div>
+      <div class="notes-upload-txt" id="trans-upload-txt">필기 사진을 올려봐</div>
+      <div class="notes-upload-sub">여러 장도 한번에 OK · 선명할수록 정확</div>
+    </div>
+    <div id="trans-img-preview" style="display:none;margin-top:10px"></div>
+  </div>
+
+  <!-- OCR 진행 상태 -->
+  <div id="trans-ocr-status" style="display:none;margin-bottom:10px">
+    <div class="card" style="--acc:var(--yellow)">
+      <div class="clabel" style="color:var(--yellow)">OCR 진행 중</div>
+      <div style="background:var(--bg3);border-radius:6px;height:6px;overflow:hidden;margin-bottom:6px">
+        <div id="trans-ocr-bar" style="height:100%;background:var(--yellow);border-radius:6px;transition:width .3s;width:0%"></div>
       </div>
-      <input class="s-inp" id="sample-text-val" placeholder="사진 속 실제 텍스트 (정답)를 입력하세요">
-      <button class="sadd-btn" onclick="addSample()">+ 샘플 추가</button>
+      <div id="trans-ocr-txt" style="font-family:var(--mono);font-size:11px;color:var(--text3)">텍스트 인식 중...</div>
     </div>
   </div>
 
+  <!-- STEP 2: 미리보기 + 직접 수정 -->
   <div class="card" style="--acc:var(--yellow)">
-    <div class="clabel" style="color:var(--yellow)">RAW INPUT — 날것의 생각</div>
-    <textarea class="tin" id="raw-input" style="--acc:var(--yellow);min-height:130px" placeholder="뇌를 그대로 붓는 공간. 맞춤법 신경 쓰지 말고 마음껏 써봐."></textarea>
+    <div class="clabel" style="color:var(--yellow)">STEP 2 · 미리보기 — 직접 수정해봐</div>
+    <textarea class="tin" id="raw-input" style="--acc:var(--yellow);min-height:160px" placeholder="사진을 올리면 여기에 인식된 텍스트가 나와. 잘못 읽힌 부분은 직접 고쳐도 돼!&#10;&#10;사진 없이 바로 입력해도 OK."></textarea>
     <div style="display:flex;gap:8px;margin-top:10px">
       <div style="flex:1">
         <label style="font-size:10px;color:var(--text3);font-family:var(--mono);display:block;margin-bottom:4px">과목</label>
@@ -711,16 +722,17 @@ input.s-inp:focus{border-color:var(--cyan)}
         </select>
       </div>
     </div>
-    <button class="btn btn-pink" id="trans-btn" onclick="translate()">🖨️ 번역 시작</button>
+    <button class="btn btn-pink" id="trans-btn" onclick="translate()">🤖 AI로 정리하기</button>
   </div>
 
+  <!-- STEP 3: 결과 -->
   <div class="rbox" id="trans-result">
     <div class="out-tabs">
       <button class="otab active memo" onclick="switchOutput('memo',this)">💥 암기용 (내 바이브)</button>
       <button class="otab formal" onclick="switchOutput('formal',this)">📄 제출용 (교과서체)</button>
     </div>
     <div id="out-memo" class="opanel active">
-      <div class="memo-out" id="memo-content"><div class="ph">아직 변환 전이야!<br><span>번역 시작</span> 버튼을 눌러봐 🔥</div></div>
+      <div class="memo-out" id="memo-content"><div class="ph">아직 변환 전이야!<br><span>AI로 정리하기</span> 버튼을 눌러봐 🔥</div></div>
       <button class="send-to-study-btn" id="send-study-btn" onclick="sendToStudy()" style="display:none">📚 학습카드로 보내기</button>
     </div>
     <div id="out-formal" class="opanel">
@@ -729,6 +741,20 @@ input.s-inp:focus{border-color:var(--cyan)}
         <button class="copy-btn" style="float:none;flex:1" onclick="copyFormal()">📋 복사</button>
         <button class="copy-btn" style="float:none;flex:1;color:var(--pink);border-color:var(--pink)" onclick="printNote()">🖨️ 프린트</button>
       </div>
+    </div>
+  </div>
+
+  <!-- 손글씨 샘플 (선택) -->
+  <div class="card" style="--acc:var(--purple)">
+    <div class="clabel" style="color:var(--purple)">필기체 샘플 (선택 · OCR 정확도 향상)</div>
+    <div class="slist" id="sample-list"></div>
+    <div class="sform">
+      <div class="sup-row">
+        <button class="sup-btn">📷 악필 사진<input type="file" accept="image/*" id="sample-img-input" onchange="setSampleImg(this)"></button>
+        <span class="sfname" id="sample-img-name">선택 안 됨</span>
+      </div>
+      <input class="s-inp" id="sample-text-val" placeholder="사진 속 실제 텍스트 (정답)를 입력하세요">
+      <button class="sadd-btn" onclick="addSample()">+ 샘플 추가</button>
     </div>
   </div>
 
@@ -1015,6 +1041,7 @@ function init() {
   renderSamples();
   updateGradeContext();
   setupDragDrop();
+  setupTransDragDrop();
   buildWeekTabs();
   initStudy();
   initNotes();
@@ -1583,6 +1610,113 @@ function renderSamples() {
   if (!samples.length) { list.innerHTML=`<div style="font-size:11px;color:var(--text3);font-family:var(--mono);padding:8px">등록된 샘플 없음.</div>`; return; }
   list.innerHTML = samples.map((s,i)=>`<div class="sitem"><div class="sinfo"><div class="simg-lbl">📷 ${s.imgName}</div><div class="stext-p">"${s.text.substring(0,40)}${s.text.length>40?'...':''}"</div></div><button class="sdel" onclick="removeSample(${i})">✕</button></div>`).join('');
 }
+// ── 자아번역기: 사진 업로드 + OCR ──
+let transImgs = []; // [{name, dataUrl}]
+
+function handleTransUpload(input) {
+  const files = [...input.files];
+  if (!files.length) return;
+
+  const preview = document.getElementById('trans-img-preview');
+  let loaded = 0;
+
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      transImgs.push({ name: file.name, dataUrl: e.target.result });
+      loaded++;
+      if (loaded === files.length) {
+        renderTransPreview();
+        document.getElementById('trans-upload-icon').textContent = '✅';
+        document.getElementById('trans-upload-txt').textContent = `${transImgs.length}장 선택됨 — 다시 누르면 추가`;
+        runTransOCR();
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value = '';
+}
+
+function renderTransPreview() {
+  const el = document.getElementById('trans-img-preview');
+  if (!transImgs.length) { el.style.display = 'none'; el.innerHTML = ''; return; }
+  el.style.display = 'flex';
+  el.style.cssText = 'display:flex;gap:8px;overflow-x:auto;margin-top:10px';
+  el.innerHTML = transImgs.map((img,i) => `
+    <div style="position:relative;flex:none">
+      <img src="${img.dataUrl}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--border)">
+      <button onclick="removeTransImg(${i})" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:var(--pink);color:#fff;border:none;font-size:11px;cursor:pointer;line-height:1">✕</button>
+    </div>`).join('');
+}
+
+function removeTransImg(idx) {
+  transImgs.splice(idx,1);
+  renderTransPreview();
+  if (!transImgs.length) {
+    document.getElementById('trans-upload-icon').textContent = '📸';
+    document.getElementById('trans-upload-txt').textContent = '필기 사진을 올려봐';
+  }
+}
+
+async function runTransOCR() {
+  if (!transImgs.length) return;
+
+  const statusBox = document.getElementById('trans-ocr-status');
+  const bar = document.getElementById('trans-ocr-bar');
+  const txt = document.getElementById('trans-ocr-txt');
+  statusBox.style.display = 'block';
+  bar.style.width = '0%';
+
+  try {
+    if (typeof Tesseract === 'undefined') {
+      txt.textContent = 'OCR 엔진 불러오는 중...';
+      await loadScript('https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.1.1/tesseract.min.js');
+    }
+
+    let combined = '';
+    for (let i = 0; i < transImgs.length; i++) {
+      const img = transImgs[i];
+      txt.textContent = `${i+1}/${transImgs.length}번째 사진 인식 중...`;
+      const result = await Tesseract.recognize(img.dataUrl, 'kor+eng', {
+        logger: m => {
+          if (m.status === 'recognizing text') {
+            const pct = Math.round((i + m.progress) / transImgs.length * 100);
+            bar.style.width = pct + '%';
+            txt.textContent = `${i+1}/${transImgs.length}번째 사진 · ${Math.round(m.progress*100)}%`;
+          }
+        }
+      });
+      combined += (combined ? '\n\n' : '') + result.data.text.trim();
+    }
+
+    const raw = document.getElementById('raw-input');
+    raw.value = raw.value.trim() ? raw.value.trim() + '\n\n' + combined : combined;
+    showToast('✅ 텍스트 추출 완료! 확인하고 수정해봐');
+  } catch(e) {
+    showToast('OCR 오류: ' + e.message.slice(0,30));
+    txt.textContent = 'OCR 실패 — 직접 입력해도 돼';
+  }
+
+  statusBox.style.display = 'none';
+}
+
+function setupTransDragDrop() {
+  const zone = document.getElementById('trans-upload-zone');
+  if (!zone) return;
+  zone.addEventListener('dragover', e=>{e.preventDefault();zone.classList.add('dragover');});
+  zone.addEventListener('dragleave',()=>zone.classList.remove('dragover'));
+  zone.addEventListener('drop',e=>{
+    e.preventDefault();zone.classList.remove('dragover');
+    const files=[...e.dataTransfer.files].filter(f=>f.type.startsWith('image/'));
+    if(!files.length) return;
+    const dt=new DataTransfer();
+    files.forEach(f=>dt.items.add(f));
+    const inp=document.getElementById('trans-file-inp');
+    inp.files=dt.files;
+    handleTransUpload(inp);
+  });
+}
+
 async function translate() {
   
   const raw = document.getElementById('raw-input').value.trim();
