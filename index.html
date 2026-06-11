@@ -2470,7 +2470,7 @@ function downloadImg() {
 // 모달 키보드 & 스와이프
 document.addEventListener('keydown', e => {
   const modal = document.getElementById('img-modal');
-  if (!modal.classList.contains('show')) return;
+  if (!modal || !modal.classList.contains('show')) return;
   if (e.key === 'ArrowLeft')  imgModalNav(-1);
   if (e.key === 'ArrowRight') imgModalNav(1);
   if (e.key === 'Escape')     closeImgModal();
