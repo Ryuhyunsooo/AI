@@ -1,11 +1,10 @@
 // 학교 서바이벌 치트키 — Service Worker
-const CACHE = 'cheatkey-v1';
+const CACHE = 'cheatkey-v3';
 const FILES = [
-  './school_survival.html',
+  './index.html',
   './manifest.json'
 ];
 
-// 설치: 핵심 파일 캐시
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE).then(c => c.addAll(FILES))
@@ -13,7 +12,6 @@ self.addEventListener('install', e => {
   self.skipWaiting();
 });
 
-// 활성화: 오래된 캐시 삭제
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys =>
@@ -23,7 +21,6 @@ self.addEventListener('activate', e => {
   self.clients.claim();
 });
 
-// 요청 가로채기: 캐시 우선, 없으면 네트워크
 self.addEventListener('fetch', e => {
   e.respondWith(
     caches.match(e.request).then(cached => cached || fetch(e.request))
