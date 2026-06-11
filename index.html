@@ -1023,10 +1023,11 @@ function init() {
   updateDday();
 
   const apiKeyInput = document.getElementById('api-key-input');
-  if (apiKey && apiKeyInput) {
+  const apiStatus = document.getElementById('api-status');
+  if (apiKey && apiKeyInput && apiStatus) {
     apiKeyInput.value = apiKey;
-    document.getElementById('api-status').textContent  = '✓ 저장된 키 있음';
-    document.getElementById('api-status').className    = 'api-st api-ok';
+    apiStatus.textContent  = '✓ 저장된 키 있음';
+    apiStatus.className    = 'api-st api-ok';
   }
 
   renderSamples();
