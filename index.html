@@ -91,7 +91,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .neis-dot.loading{background:var(--yellow);animation:blink 1s infinite}
 .neis-dot.error{background:var(--red)}
 
-/* ── 자아번역기 ── */
+/* ── 결과 카드 ── */
 .notes-upload-zone{border:2px dashed var(--border2);border-radius:12px;padding:24px 16px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
 .notes-upload-zone:hover,.notes-upload-zone.dragover{border-color:var(--cyan);background:rgba(57,208,216,.04)}
 .notes-upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0}
@@ -99,23 +99,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .notes-upload-txt{font-size:13px;color:var(--text2);font-weight:700}
 .notes-upload-sub{font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:4px}
 
-.out-tabs{display:flex;gap:4px;margin-bottom:10px}
-.otab{flex:1;padding:9px;text-align:center;border-radius:8px;border:1px solid var(--border2);background:var(--bg3);font-family:var(--main);font-size:12px;font-weight:700;color:var(--text3);cursor:pointer;transition:all .2s}
-.otab.active.memo{background:rgba(227,179,65,.12);border-color:var(--yellow);color:var(--yellow)}
-.otab.active.formal{background:rgba(57,208,216,.12);border-color:var(--cyan);color:var(--cyan)}
-.opanel{display:none}
-.opanel.active{display:block}
-.memo-out{background:var(--bg);border-radius:10px;padding:14px;border:1px solid var(--border)}
-.formal-out{background:#fff;color:#1a1a1a;border-radius:10px;padding:16px;font-size:13px;line-height:1.8}
-.formal-out h3{font-size:15px;margin:12px 0 6px;color:#000}
-.formal-out h3:first-child{margin-top:0}
-.formal-out p{margin-bottom:8px}
-.formal-out ul,.formal-out ol{margin:6px 0 8px 20px}
-.formal-out table{width:100%;border-collapse:collapse;margin:8px 0;font-size:12px}
-.formal-out th,.formal-out td{border:1px solid #ccc;padding:6px 8px;text-align:left}
-.formal-out th{background:#f0f0f0}
-.copy-btn{font-family:var(--mono);font-size:11px;padding:8px;border-radius:8px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);cursor:pointer;transition:all .2s}
-.copy-btn.copied{color:var(--green);border-color:var(--green)}
 .rbox{display:none}
 .rbox.show{display:block}
 
@@ -182,7 +165,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   <div class="tabs">
     <button class="tbtn active" onclick="switchTab('meal',this)">🍱 급식</button>
     <button class="tbtn" onclick="switchTab('assign',this)">📝 수행평가</button>
-    <button class="tbtn" onclick="switchTab('trans',this)">🖨️ 자아번역기</button>
     <button class="tbtn" onclick="switchTab('planner',this)">📅 플래너</button>
   </div>
 
@@ -223,59 +205,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <div id="assign-result" class="rbox"></div>
   </div>
 
-  <!-- ══════════ TAB 3: 자아번역기 ══════════ -->
-  <div id="tab-trans" class="panel">
-    <div class="sec-title">🖨️ 자아번역기</div>
-    <div class="sec-sub"># 필기 사진 + 메모 → AI가 암기용/제출용으로 정리</div>
-
-    <div class="card" style="--acc:var(--cyan)">
-      <div class="clabel">STEP 1 · 필기 사진</div>
-      <div class="notes-upload-zone" id="trans-upload-zone">
-        <input type="file" id="trans-file-inp" accept="image/*" multiple onchange="handleTransUpload(this)">
-        <div class="notes-upload-icon" id="trans-upload-icon">📸</div>
-        <div class="notes-upload-txt" id="trans-upload-txt">필기 사진을 올려봐</div>
-        <div class="notes-upload-sub">여러 장 가능 · 화살표/표/도식 다 OK</div>
-      </div>
-      <div class="img-prev-row" id="trans-img-preview"></div>
-    </div>
-
-    <div class="card" style="--acc:var(--yellow)">
-      <div class="clabel" style="color:var(--yellow)">STEP 2 · 추가 메모 (선택)</div>
-      <textarea class="tin" id="raw-input" style="--acc:var(--yellow);min-height:90px" placeholder="사진만으로 충분하면 비워도 돼.&#10;사진에 없는 내용, 강조할 부분을 적어봐."></textarea>
-      <div style="display:flex;gap:8px">
-        <div style="flex:1">
-          <label style="font-size:10px;color:var(--text3);font-family:var(--mono);display:block;margin-bottom:4px">과목</label>
-          <input class="s-inp" id="subject-input" placeholder="예) 생물, 국어">
-        </div>
-        <div style="flex:1">
-          <label style="font-size:10px;color:var(--text3);font-family:var(--mono);display:block;margin-bottom:4px">목적</label>
-          <select id="purpose-select">
-            <option>암기용 요약</option><option>시험 대비</option><option>제출용 정리</option><option>개념 정리</option>
-          </select>
-        </div>
-      </div>
-      <button class="btn btn-pink" id="trans-btn" onclick="translate()">🤖 AI로 정리하기</button>
-    </div>
-
-    <div class="rbox" id="trans-result">
-      <div class="out-tabs">
-        <button class="otab active memo" onclick="switchOutput('memo',this)">💥 암기용</button>
-        <button class="otab formal" onclick="switchOutput('formal',this)">📄 제출용</button>
-      </div>
-      <div id="out-memo" class="opanel active">
-        <div class="memo-out" id="memo-content"><div class="ph">아직 변환 전이야!<br><span>AI로 정리하기</span> 눌러봐 🔥</div></div>
-      </div>
-      <div id="out-formal" class="opanel">
-        <div class="formal-out" id="formal-content"><div class="ph">제출용 문서가 여기에 나와.</div></div>
-        <div style="display:flex;gap:8px;margin-top:8px">
-          <button class="copy-btn" style="flex:1" onclick="copyFormal()">📋 복사</button>
-          <button class="copy-btn" style="flex:1;color:var(--pink);border-color:var(--pink)" onclick="printNote()">🖨️ 프린트</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══════════ TAB 4: 플래너 ══════════ -->
+  <!-- ══════════ TAB 3: 플래너 ══════════ -->
   <div id="tab-planner" class="panel">
     <div class="sec-title">📅 플래너</div>
     <div class="sec-sub"># 시험 D-Day · 오늘 할 일</div>
@@ -352,7 +282,6 @@ function init() {
 
   initMeal();
   initPlanner();
-  setupTransDragDrop();
   setupAssignDragDrop();
 
   const lastTab = localStorage.getItem('ss_lasttab');
@@ -456,6 +385,44 @@ function parseMenu(str) {
   return str.split('<br/>').map(s => s.replace(/\([\d.]+\)/g,'').trim()).filter(Boolean);
 }
 
+// NEIS 응답이 없을 때 쓰는 백업 급식 데이터 (koreacharts.com 기준 6월)
+const MEAL_BACKUP = {
+  "20260601": {"lunch": ["칼슘현미밥","고깃집된장찌개","고추장달걀볶이","콩나물무침","LA돼지갈비구이","배추김치"]},
+  "20260602": {"lunch": ["목살필라프","싸먹는또띠아케이준치킨텐더","콩가루배추국","깍두기","조각메론"]},
+  "20260604": {"lunch": ["혼합17곡밥","한우나주곰탕*당면사리","순한맛김치만두","오이고추된장무침","석박지","골라먹는아몬드(허니버터/쿠앤크/티라미슈)"]},
+  "20260605": {"lunch": ["현미밥","간장계란국수(小)","가쓰오장국","탄두리닭다리살구이","열무김치","사과쏙앵두스무디"]},
+  "20260608": {"lunch": ["그릴숯불갈비치밥","수제페스츄리꽈배기","얼갈이된장국","김가루실파무침","열무김치"]},
+  "20260609": {"lunch": ["수제가츠산도(일본식돈까스샌드위치)","맑은콩나물국","양배추케요네즈샐러드","닭갈비볶음밥","깍두기","청포도데미소다"]},
+  "20260610": {"lunch": ["혼합17곡밥","돼지고기묵은지찜(大)","단배추겉절이","크런치생선까스*타르타르소스","나박물김치","수제열대과일초코링요거트(컵)"]},
+  "20260611": {"lunch": ["멕시코st불고기타코(수제)","버터치킨카레라이스","오이양파무침","배추김치","오렌지"]},
+  "20260612": {"lunch": ["돈코츠라멘","참깨그린샐러드","타코야끼볼꼬치","배추김치","라임레몬주스"]},
+  "20260615": {"lunch": ["혼합17곡밥","카스테라핫도그*케첩","분모자순살찜닭(大)","레몬파인샐러드","파래자반볶음","배추김치"]},
+  "20260616": {"lunch": ["보리밥","모듬부대찌개","한식잡채","데리야끼순살고등어구이","열무김치","한입초코수리취떡"]},
+  "20260617": {"lunch": ["찰옥수수밥","투움바리가토니파스타(小)","팽이유부장국","마크니그레이비돈까스","배추김치","프레주자두"]},
+  "20260618": {"lunch": ["칼슘현미밥","살코기돼지국밥*다대기양념","육즙가득갈비만두","부추겉절이","석박지","파인애플"]},
+  "20260619": {"lunch": ["김밥볶음밥","오이토마토무침","국물떡볶이(大)","고구마야채튀김&롱김말이튀김","나박물김치","복숭아쿨피스(大)"]},
+  "20260622": {"lunch": ["누룽현미밥","꼬치어묵탕","북성로대패불고기","양파고추간장절임","배추김치","명란바사삭김"]},
+  "20260623": {"lunch": ["우리밀초코파이","계란대파국","매실유린기샐러드","마파두부덮밥","현미찹쌀꿔바로우","깍두기"]},
+  "20260624": {"lunch": ["망향물비빔국수","메추리알장조림","한우떡갈비구이","열무김치","프리즈팝청포도"]},
+  "20260625": {"lunch": ["혼합17곡밥","들깨미역국","마늘동인동찜갈비","연두부*양념장","배추김치","바나나"]},
+  "20260626": {"lunch": ["스팸김치볶음밥","건새우근대국","황도복숭아샐러드","고추마요순살치킨","열무물김치","사과맛오라떼"]},
+  "20260629": {"lunch": ["한입동파육덮밥","들깨무채국","샤오롱바오딤섬","배추김치","궁채장아찌"]},
+  "20260630": {"lunch": ["한우콩나물밥*양념장","돈육김치찌개","짬뽕꼬마새송이버섯볶음","맛쵸킹탕수육","깍두기","요구르트슈스틱"]}
+};
+
+// 이번 주 날짜 중 백업에 있는 데이터로 채워주기
+function fillFromBackup(dates) {
+  let filled = 0;
+  dates.forEach(d => {
+    const key = `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+    if (MEAL_BACKUP[key] && (!weekMealCache[key] || !weekMealCache[key].lunch)) {
+      weekMealCache[key] = { ...weekMealCache[key], ...MEAL_BACKUP[key] };
+      filled++;
+    }
+  });
+  return filled;
+}
+
 async function fetchNeisWeek() {
   const btn = document.getElementById('refresh-btn');
   btn.disabled = true;
@@ -486,8 +453,13 @@ async function fetchNeisWeek() {
     if (data.RESULT) {
       const code = data.RESULT.CODE;
       if (code === 'INFO-200') {
-        setNeisStatus('error', '이번 주 급식 데이터 없음');
         weekMealCache = {};
+        const filled = fillFromBackup(weekDates.length ? weekDates : getWeekRange().dates);
+        if (filled > 0) {
+          setNeisStatus('ok', `백업 데이터 사용 중 (${filled}일)`);
+        } else {
+          setNeisStatus('error', '이번 주 급식 데이터 없음');
+        }
         renderMealContent();
         btn.disabled = false; return;
       }
@@ -507,14 +479,23 @@ async function fetchNeisWeek() {
       if (mtype === '3') { weekMealCache[date].dinner = menus; weekMealCache[date].dinnerCal = cal; }
     });
 
+    // NEIS가 일부 날짜만 줬으면 나머지는 백업으로 채우기
+    const filled = fillFromBackup(weekDates.length ? weekDates : getWeekRange().dates);
+
     localStorage.setItem('ss_meal_cache', JSON.stringify(weekMealCache));
     const now = new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
     localStorage.setItem('ss_meal_time', now);
     document.getElementById('neis-time').textContent = `업데이트: ${now}`;
-    setNeisStatus('ok', '연결됨');
+    setNeisStatus('ok', filled > 0 ? `연결됨 (백업 ${filled}일 보충)` : '연결됨');
     renderMealContent();
   } catch(e) {
-    setNeisStatus('error', '오류: ' + e.message.slice(0,30));
+    weekMealCache = {};
+    const filled = fillFromBackup(weekDates.length ? weekDates : getWeekRange().dates);
+    if (filled > 0) {
+      setNeisStatus('ok', `백업 데이터 사용 중 (${filled}일)`);
+    } else {
+      setNeisStatus('error', '오류: ' + e.message.slice(0,30));
+    }
     renderMealContent();
   }
   btn.disabled = false;
@@ -633,138 +614,6 @@ function renderTodos() {
   }
   const done = todos.filter(t=>t.done).length;
   document.getElementById('todo-count').textContent = `${done}/${todos.length}`;
-}
-
-// ══════════════════════════════════════════
-//  자아번역기
-// ══════════════════════════════════════════
-let transImgs = [];
-
-function setupTransDragDrop() {
-  const zone = document.getElementById('trans-upload-zone');
-  zone.addEventListener('dragover', e=>{e.preventDefault();zone.classList.add('dragover');});
-  zone.addEventListener('dragleave',()=>zone.classList.remove('dragover'));
-  zone.addEventListener('drop',e=>{
-    e.preventDefault();zone.classList.remove('dragover');
-    const files=[...e.dataTransfer.files].filter(f=>f.type.startsWith('image/'));
-    if(!files.length) return;
-    const dt=new DataTransfer();
-    files.forEach(f=>dt.items.add(f));
-    const inp=document.getElementById('trans-file-inp');
-    inp.files=dt.files;
-    handleTransUpload(inp);
-  });
-}
-
-function handleTransUpload(input) {
-  const files = [...input.files];
-  if (!files.length) return;
-  let loaded = 0;
-  files.forEach(file => {
-    const reader = new FileReader();
-    reader.onload = e => {
-      transImgs.push({ name: file.name, dataUrl: e.target.result });
-      loaded++;
-      if (loaded === files.length) {
-        renderTransPreview();
-        document.getElementById('trans-upload-icon').textContent = '✅';
-        document.getElementById('trans-upload-txt').textContent = `${transImgs.length}장 선택됨 — 다시 누르면 추가`;
-        showToast('사진 추가됨!');
-      }
-    };
-    reader.readAsDataURL(file);
-  });
-  input.value = '';
-}
-
-function renderTransPreview() {
-  const el = document.getElementById('trans-img-preview');
-  el.innerHTML = transImgs.map((img,i) => `
-    <div class="img-prev-item">
-      <img src="${img.dataUrl}">
-      <button class="img-prev-del" onclick="removeTransImg(${i})">✕</button>
-    </div>`).join('');
-}
-
-function removeTransImg(idx) {
-  transImgs.splice(idx,1);
-  renderTransPreview();
-  if (!transImgs.length) {
-    document.getElementById('trans-upload-icon').textContent = '📸';
-    document.getElementById('trans-upload-txt').textContent = '필기 사진을 올려봐';
-  }
-}
-
-let lastTransContent = '';
-
-async function translate() {
-  const raw = document.getElementById('raw-input').value.trim();
-  const subject = document.getElementById('subject-input').value.trim();
-  const purpose = document.getElementById('purpose-select').value;
-
-  if (!raw && !transImgs.length) { showToast('사진을 올리거나 내용을 입력해줘!'); return; }
-
-  const btn = document.getElementById('trans-btn');
-  btn.disabled = true; btn.textContent = '정리 중...';
-  document.getElementById('trans-result').classList.add('show');
-  document.getElementById('memo-content').innerHTML = `<div class="ldots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
-  document.getElementById('formal-content').innerHTML = `<div class="ph">생성 중...</div>`;
-
-  const sys = `너는 고등학생의 필기/노트를 두 가지 버전으로 정리하는 AI야. 사진이 첨부되면 손글씨, 화살표, 도식, 트리 구조, 표까지 다 읽고 그 구조와 관계를 살려서 정리해줘. 반드시 아래 JSON만 출력해:
-{"memo":"암기용 — 학생 말투와 유머 살리고 핵심만 날카롭게. 이모지 드립 줄임말 OK.","formal_html":"제출용 HTML — h3 소제목, p 본문, ul/li 목록, table 비교표. 교과서 문어체. script style 태그 금지."}`;
-
-  const userContent = [];
-  const textPart = `과목:${subject||'미지정'}\n목적:${purpose}${raw ? '\n\n[추가 메모]\n'+raw : ''}`;
-  userContent.push({ type:'text', text: textPart });
-  transImgs.forEach(img => userContent.push({ type:'image_url', image_url:{ url: img.dataUrl } }));
-
-  try {
-    const res = await fetch(AI_URL, {
-      method:'POST', headers:{'Content-Type':'application/json','Authorization':`Bearer ${apiKey}`},
-      body: JSON.stringify({ model: AI_MODEL, messages:[{role:'system',content:sys},{role:'user',content:userContent}] })
-    });
-    const data = await res.json();
-    if (data.error) throw new Error(data.error.message);
-    const result = JSON.parse(data.choices[0].message.content.replace(/```json|```/g,'').trim());
-    document.getElementById('memo-content').innerHTML = `<div style="white-space:pre-line;font-size:14px;color:var(--yellow);line-height:1.8">${result.memo}</div>`;
-    document.getElementById('formal-content').innerHTML = result.formal_html;
-    lastTransContent = result.memo;
-  } catch(e) {
-    document.getElementById('memo-content').innerHTML = `<div class="ph">⚠ 오류: <span>${e.message}</span></div>`;
-  }
-  btn.disabled = false; btn.textContent = '🤖 AI로 정리하기';
-}
-
-function switchOutput(id, btn) {
-  document.querySelectorAll('.otab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.opanel').forEach(p=>p.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('out-'+id).classList.add('active');
-}
-
-function copyFormal() {
-  navigator.clipboard.writeText(document.getElementById('formal-content').innerText).then(()=>{
-    const b = document.querySelector('.copy-btn');
-    b.textContent='✓ 복사됨!'; b.classList.add('copied');
-    setTimeout(()=>{b.textContent='📋 복사'; b.classList.remove('copied');},2000);
-  });
-}
-
-function printNote() {
-  const subject = document.getElementById('subject-input').value.trim() || '학습 노트';
-  const content = document.getElementById('formal-content').innerHTML;
-  if (!content || content.includes('제출용 문서가 여기에')) { showToast('먼저 AI로 정리해봐!'); return; }
-  const now = new Date();
-  const dateStr = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}`;
-  const printWin = window.open('', '_blank');
-  printWin.document.write(`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>${subject}</title>
-<style>body{font-family:'Noto Sans KR',sans-serif;padding:40px;color:#1a1a1a;line-height:1.8}
-h3{margin:16px 0 8px}table{width:100%;border-collapse:collapse;margin:8px 0}
-th,td{border:1px solid #ccc;padding:6px 8px}th{background:#f0f0f0}
-.ttl{display:flex;justify-content:space-between;border-bottom:2px solid #333;padding-bottom:8px;margin-bottom:16px}
-</style></head><body><div class="ttl"><h2>${subject}</h2><span>${dateStr}</span></div>${content}</body></html>`);
-  printWin.document.close();
-  setTimeout(()=>printWin.print(), 400);
 }
 
 // ══════════════════════════════════════════
